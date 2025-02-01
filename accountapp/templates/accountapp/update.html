@@ -5,7 +5,7 @@
 
     <div>
         <div class="mb-4">
-                <h4>Change Info</h4>
+                <h4>유저 정보 변경</h4>
         </div>
         <form action="{% url 'accountapp:update' pk=target_user.pk %}" method="post">
             {% csrf_token %}

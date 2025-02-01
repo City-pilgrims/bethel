@@ -11,8 +11,8 @@
             <h2 style="font-family: 'NanumSquareB'">
                 {{ target_user.profile.nickname }}
                 {% if target_user == user %}
-                    <a href="{% url 'profileapp:update' pk=target_user.profile.pk %}" style="color: red;">
-                        수정
+                    <a href="{% url 'profileapp:update' pk=target_user.profile.pk %}" style="color: green; font-size: 1rem;">
+                        프로필수정
                     </a>
                 {% endif %}
 
@@ -36,15 +36,12 @@
         {% endif %}
 
         {% if target_user == user %}
-            <a href="{% url 'accountapp:update' pk=user.pk %}">
-                <p>
-                    유저 정보 변경
-                </p>
+            <a href="{% url 'accountapp:update' pk=user.pk %}" class = "btn btn-success rounded-pill btn-sm col-23" style="text-decoration-line: none;">
+                사용자 정보 변경
             </a>
-            <a href="{% url 'accountapp:delete' pk=user.pk %}">
-                <p>
-                    계정 삭제
-                </p>
+            &nbsp
+            <a href="{% url 'accountapp:delete' pk=user.pk %}" class = "btn btn-danger rounded-pill btn-sm col-23" style="text-decoration-line: none;">
+                사용자 계정 삭제
             </a>
         {% endif %}
     </div>
