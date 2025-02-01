@@ -1,0 +1,113 @@
+{% extends 'base_truth.html' %}
+{% load bootstrap4 %}
+{% load static %}
+
+{% block content %}
+
+    <div style="text-align: center; font-family: 'NanumSquareB'; margin-top: 100px;">
+        <h5>Word of GOD</h5>
+    </div>
+    <br>
+    <div style="display: flex; flex-direction: row; text-align: center; max-width: 500px; margin-left: auto; margin-right: auto;">
+        <div style="width: 250px; height: 50px; margin-left: 20px;">
+            <form action="{% url 'truthapp:bible' %}" method="get" id="bible_select">
+                <select onchange="this.form.submit()" name="bible_select" id="bible_select" style="font-size: 1.3rem;">
+                    <option value="" disabled selected>Old Testament</option>
+                    <option value="창세기">창세기</option>
+                    <option value="출애굽기">출애굽기</option>
+                    <option value="레위기">레위기</option>
+                    <option value="민수기">민수기</option>
+                    <option value="신명기">신명기</option>
+                    <option value="여호수아">여호수아</option>
+                    <option value="사사기">사사기</option>
+                    <option value="룻기">룻기</option>
+                    <option value="사무엘상">사무엘상</option>
+                    <option value="사무엘하">사무엘하</option>
+                    <option value="열왕기상">열왕기상</option>
+                    <option value="열왕기하">열왕기하</option>
+                    <option value="역대상">역대상</option>
+                    <option value="역대하">역대하</option>
+                    <option value="에스라">에스라</option>
+                    <option value="느헤미아">느헤미아</option>
+                    <option value="에스더">에스더</option>
+                    <option value="욥기">욥기</option>
+                    <option value="시편">시편</option>
+                    <option value="잠언">잠언</option>
+                    <option value="전도서">전도서</option>
+                    <option value="아가">아가</option>
+                    <option value="이사야">이사야</option>
+                    <option value="예레미아">예레미아</option>
+                    <option value="예레애가">예레미아애가</option>
+                    <option value="에스겔">에스겔</option>
+                    <option value="다니엘">다니엘</option>
+                    <option value="호세아">호세아</option>
+                    <option value="요엘">요엘</option>
+                    <option value="아모스">아모스</option>
+                    <option value="오바댜">오바댜</option>
+                    <option value="요나">요나</option>
+                    <option value="미가">미가</option>
+                    <option value="나훔">나훔</option>
+                    <option value="하박국">하박국</option>
+                    <option value="스바냐">스바냐</option>
+                    <option value="학개">학개</option>
+                    <option value="스가랴">스가랴</option>
+                    <option value="말라기">말라기</option>
+                </select>
+            </form>
+        </div>
+        <div style="width: 250px; height: 50px; margin-right: 20px;">
+            <form action="{% url 'truthapp:bible' %}" method="get" id="bible_select">
+                <select onchange="this.form.submit()" name="bible_select" id="bible_select" style="font-size: 1.3rem;">
+                    <option value="" disabled selected>New Testament</option>
+                    <option value="마태복음">마태복음</option>
+                    <option value="마가복음">마가복음</option>
+                    <option value="누가복음">누가복음</option>
+                    <option value="요한복음">요한복음</option>
+                    <option value="사도행전">사도행전</option>
+                    <option value="로마서">로마서</option>
+                    <option value="고린도전서">고린도전서</option>
+                    <option value="고린도후서">고린도후서</option>
+                    <option value="갈라디아서">갈라디아서</option>
+                    <option value="에베소서">에베소서</option>
+                    <option value="빌립보서">빌립보서</option>
+                    <option value="골로새서">골로새서</option>
+                    <option value="데살전서">데살로니가전서</option>
+                    <option value="데살후서">데살로니가후서</option>
+                    <option value="디모전서">디모데전서</option>
+                    <option value="디모후서">디모데후서</option>
+                    <option value="디도서">디도서</option>
+                    <option value="빌레몬서">빌레몬서</option>
+                    <option value="히브리서">히브리서</option>
+                    <option value="야고보서">야고보서</option>
+                    <option value="베드로전서">베드로전서</option>
+                    <option value="베드로후서">베드로후서</option>
+                    <option value="요한일서">요한일서</option>
+                    <option value="요한이서">요한이서</option>
+                    <option value="요한삼서">요한삼서</option>
+                    <option value="유다서">유다서</option>
+                    <option value="요한계시록">요한계시록</option>
+                </select>
+            </form>
+        </div>
+    </div>
+
+    <div class="txc-textbox" style="background-color: #f6f6f6; border-radius: 15px; padding: 8px; max-width: 380px; margin-left: auto; margin-right: auto; margin-bottom: 0.5rem;">
+        <p style="text-align: center; font-size: 1.2rem;">
+            <br>
+            태초에 말씀이 계시니라 이 말씀이<br> 하나님과 함께 계셨으니 이 말씀은<br> 곧 하나님이시니라<br><br>[요한복음 1:1]
+        </p>
+    </div>
+    <div class="txc-textbox" style="background-color: #f6f6f6; border-radius: 15px; padding: 8px; max-width: 380px; margin-left: auto; margin-right: auto; margin-bottom: 0.5rem;">
+        <p style="text-align: center; font-size: 1.2rem;">
+            <br>
+            여호와께서 이르시되 내가 그들과<br> 세운 나의 언약이 이러하니<br> 곧 네 위에 있는 나의 영과<br> 네 입에 둔 나의 말이 이제부터<br> 영원하도록 네 입에서와 네 후손의<br> 입에서와 네 후손의 후손의 입에서 <br>떠나지 아니하리라 하시니라<br> 여호와의 말씀이니라.<br> 일어나라 빛을 발하라<br><br>[이사야 59:21-60:1]
+        </p>
+    </div>
+    <div class="txc-textbox" style="background-color: #f6f6f6; border-radius: 15px; padding: 8px; max-width: 380px; margin-left: auto; margin-right: auto;">
+        <p style="text-align: center; font-size: 1.2rem;">
+            <br>
+            하늘에 있는 것이나 땅에 있는 것이<br> 다 그리스도 안에서 통일되게<br> 하려 하심이라<br><br>[에베소서 1:10]
+        </p>
+    </div>
+
+{% endblock %}

@@ -1,0 +1,57 @@
+
+    <style>
+        .bethel_header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+
+            padding: 1rem;
+            width: 100%;
+            background-color: white;
+            text-align: center;
+            z-index: 1000;
+        }
+
+        .bethel_header a {
+            color: black;
+            text-decoration-line: none;
+            font-weight: bold;
+        }
+    </style>
+
+    <div class="bethel_header" style="height: 100px;">
+        <div style="margin-bottom: 20px; color: #800020;">
+            <h1 class="bethel_logo">Bethel of Seoul</h1>
+        </div>
+        <div>
+            <a href="{% url 'pilgrimsapp:intro' %}">
+                <span>Pilgrims</span>
+            </a>&nbsp
+            <a href="{% url 'truthapp:index' %}">
+                <span>Truth</span>
+            </a>&nbsp
+            <a href="{% url 'wayapp:list' %}">
+                <span>Way</span>
+            </a>&nbsp
+            <a href="{% url 'lifeapp:list' %}">
+                <span>Life</span>
+            </a>&nbsp
+
+            {% if not user.is_authenticated %}
+                <a href="{% url 'accountapp:login' %}?next={{ request.path }}">
+                    <span>Login</span>
+                </a>&nbsp
+                <a href="{% url 'accountapp:create' %}">
+                    <span>SignUp</span>
+                </a>
+            {% else %}
+                <a href="{% url 'accountapp:detail' pk=user.pk %}">
+                    <span>MyPage</span>
+                </a>&nbsp
+                <a href="{% url 'accountapp:logout' %}?next={{ request.path }}">
+                    <span>Logout</span>
+                </a>
+            {% endif %}
+        </div>
+    </div>

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<style>
+.div_bible1 {
+    text-align: center;
+    max-width: 350px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.div_bible2 {
+    text-align: left;
+    max-width: 350px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+</style>
+
+{%  include 'head.html' %}
+
+<body style="font-family: 'NanumSquareR'; ">
+
+    {% include 'header.html' %}
+
+    <hr>
+    <div style="text-align: center; max-width: 500px; margin-top: 100px;">
+        {% block content %}
+        {% endblock %}
+    </div>
+    <hr>
+
+    {% include 'footer.html' %}
+
+
+</body>
+</html>

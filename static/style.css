@@ -1,0 +1,15 @@
+
+
+.profile-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+    justify-content: flex-start;
+}
+
+.profile-header img {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    margin-right: 5px;
+}

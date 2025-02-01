@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% load bootstrap4 %}
+{% load static %}
+
+{% block content %}
+
+    <style>
+        .container div {
+          width: 250px;
+          height: 500px;
+          background-color: antiquewhite;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          border-radius: 1rem;
+        }
+
+        .container img {
+          width: 100%;
+          border-radius: 1rem;
+        }
+    </style>
+    <br>
+    <div class="txc-textbox"
+         style="background-color: skyblue; border-radius: 15px; max-width: 350px; margin-left: auto; margin-right: auto;">
+        <p style="text-align: center; font-size: 1.5rem;">
+            서비스 준비중입니다 :)
+        </p>
+    </div>
+
+{% endblock %}

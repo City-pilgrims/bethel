@@ -1,0 +1,17 @@
+{% load static %}
+
+    <div class="profile-header">
+        {% if note.author.profile %}
+            <img src="{{ note.author.profile.image.url }}" alt="{{ note.author.profile.nickname }}"
+            style="height: 20px; width: 20px;">
+            <span style="color: black; font-size: 0.8rem;">{{ note.author.profile.nickname }}</span>
+        {% else %}
+            <span style="color: black; font-size: 0.8rem;">{{ note.author.profile.nickname }}</span>
+        {% endif %}
+    </div>
+
+    <div>
+        {% with note.photo_set.all|first as photo %}
+            <img src="{{ photo.image.url }}" alt="">
+        {% endwith %}
+    </div>

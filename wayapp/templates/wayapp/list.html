@@ -1,0 +1,56 @@
+{% extends 'base_way.html' %}
+{% load bootstrap4 %}
+{% load static %}
+
+{% block content %}
+
+   <style>
+
+        .container {
+            padding: 0;
+            margin: 0 auto;
+        }
+
+        .container a {
+            width: 45%;
+            max-width: 300px;
+        }
+
+        .container div {
+            justify-content: left;
+            align-items: center;
+            border-radius: 0.5rem;
+        }
+
+        .container img {
+            width: 100%;
+            border-radius: 0.5rem;
+
+        }
+    </style>
+
+    <div>
+        <div style="text-align: right; margin-top: 90px; margin-bottom: 1rem; margin-right: 1.2rem;">
+            <a href="{% url 'wayapp:create' %}" style="text-decoration-line: none; font-size: 1.5rem; color: black;">
+                🅿︎
+            </a>
+        </div>
+
+        {% if note_list %}
+            <div class="container">
+                {% for note in note_list %}
+                    <a href="{% url 'wayapp:detail' pk=note.pk %}" style="text-decoration-line: none;">
+                        {% include 'snippets/card.html' with note=note %}
+                    </a>
+                {% endfor %}
+            </div>
+            <script src="{% static 'js/magicgrid.js' %}"></script>
+
+        {% else %}
+            <div style="text-align: center;">
+                <h1>순례 기록 없음</h1>
+            </div>
+        {% endif %}
+    </div>
+
+{% endblock %}

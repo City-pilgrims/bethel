@@ -1,0 +1,245 @@
+{% extends 'base.html' %}
+{% load bootstrap4 %}
+{% load static %}
+{% load custom_filters %}
+
+{% block content %}
+    <style>
+        .carousel-item {
+            transition: transform 0.2s ease-in-out !important;
+        }
+
+        .carousel-item img {
+            image-orientation: from-image;
+
+        }
+
+        /* 인디케이터 버튼 원형 스타일 */
+        .carousel-indicators button {
+            width: 1px;
+            height: 3px;
+            border-radius: 50%;  /* 원형으로 만들기 */
+            background-color: #000;
+            border: none;
+            opacity: 0.2;
+            transition: opacity 0.3s ease;
+            margin: 0 2px;
+        }
+
+        /* 활성화된 인디케이터 버튼 스타일 */
+        .carousel-indicators .active {
+            background-color: #007bff;
+            opacity: 1;
+        }
+
+        /* 마우스 오버 시 버튼의 배경색 변경 */
+        .carousel-indicators button:hover {
+            background-color: #0056b3;
+        }
+
+        .container {
+            display: flex; /* 자식 요소들을 수평으로 배치 */
+            justify-content: center; /* 자식 요소들 사이의 공간을 고르게 분배 */
+            align-items: center;
+        }
+
+        .left-box {
+            width: 50%; /* 왼쪽 구역의 너비 */
+            padding: 10px;
+        }
+
+        .right-box {
+            width: 50%; /* 오른쪽 구역의 너비 */
+            padding: 10px;
+            text-align: right;
+        }
+
+         /* 팝업 버튼 스타일 */
+        .popup-actions {
+            display: none; /* 초기에는 숨겨놓음 */
+            position: absolute;
+            padding: 10px;
+            z-index: 1000; /* 팝업이 다른 콘텐츠 위에 표시되도록 */
+            /*border: 1px solid #ccc;
+            background-color: #fff;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);*/
+
+            top: 18%;
+            left: 68%;
+        }
+
+        .popup-actions a {
+            display: block;
+            margin: 10px 0;
+            padding: 10px 20px;
+            text-decoration: none;
+            color: black;
+        }
+
+        .popup-actions a:hover {
+            background-color: #f1f1f1;
+        }
+
+        /* 오버레이 스타일 */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 40%;
+            background-color: rgba(0, 0, 0, 0.5); /* 반투명 검은색 */
+            z-index: 999; /* 팝업 뒤로 숨겨짐 */
+            display: none;
+        }
+    </style>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const carousel = document.getElementById("imageCarousel");
+            let startX = 0; // 터치 시작 지점
+            let moveX = 0;  // 터치 이동 지점
+            let isSwiping = false; // 스와이프 여부 확인
+
+            carousel.addEventListener("touchstart", function (e) {
+                startX = e.touches[0].clientX; // 터치 시작 위치 저장
+                isSwiping = false; // 초기화
+            });
+
+            carousel.addEventListener("touchmove", function (e) {
+                moveX = e.touches[0].clientX;
+                if (Math.abs(startX - moveX) > 50) {
+                    isSwiping = true; // 50px 이상 이동 시 스와이프 동작 활성화
+                }
+            });
+
+            carousel.addEventListener("touchend", function () {
+                if (!isSwiping) return; // 터치만 한 경우 슬라이드 변경 X
+
+                let diff = startX - moveX;
+
+                if (diff > 50) {
+                    // 왼쪽으로 스와이프 (다음 슬라이드)
+                    new bootstrap.Carousel(carousel).next();
+                } else if (diff < -50) {
+                    // 오른쪽으로 스와이프 (이전 슬라이드)
+                    new bootstrap.Carousel(carousel).prev();
+                }
+            });
+        });
+
+        // Toggle visibility of update and delete buttons
+        function toggleActions() {
+            var popup = document.getElementById("popup-actions");
+            var overlay = document.getElementById("overlay");
+
+            // 팝업 열기
+            if (popup.style.display === "none" || popup.style.display === "") {
+                popup.style.display = "block";
+                overlay.style.display = "block"; // 오버레이도 보이게
+            } else {
+                popup.style.display = "none";
+                overlay.style.display = "none"; // 오버레이 숨기기
+            }
+        }
+
+        // 팝업을 닫는 함수 (오버레이 클릭 시)
+        function closePopup() {
+            var popup = document.getElementById("popup-actions");
+            var overlay = document.getElementById("overlay");
+
+            popup.style.display = "none";
+            overlay.style.display = "none";
+        }
+
+        function confirmDelete() {
+            return confirm("삭제하시겠습니까?");
+        }
+    </script>
+
+    <script type="text/javascript">
+
+    </script>
+
+    <div class="container">
+        <div class="left-box">
+            <div class="profile-header">
+                {% if note.author.profile %}
+                    <img src="{{ note.author.profile.image.url }}" alt="{{ note.author.profile.nickname }}">
+                    <h7 style="color: black;">{{ note.author.profile.nickname }}</h7>
+                {% else %}
+                    <h7 style="color: black;">{{ note.author.profile.nickname }}</h7>
+                {% endif %}
+            </div>
+        </div>
+        <div class="right-box">
+            {% if note.author == user %}
+                <div class="post-actions">
+                    <button style="border: none; outline: none; background: transparent; cursor:pointer;" onclick="toggleActions()">&#65049</button>
+                    <!-- Update and Delete buttons, initially hidden -->
+                    <div id="popup-actions" class="popup-actions" style="display: none;">
+                        <a href="{% url 'wayapp:update' pk=note.pk %}" class = "btn btn-success rounded-pill btn-sm col-22">Update</a>
+                        <a href="{% url 'wayapp:delete' pk=note.pk %}" class = "btn btn-danger rounded-pill btn-sm col-22" onclick="return confirmDelete();">Delete</a>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+        <!-- 팝업 오버레이 (클릭 시 닫기 가능) -->
+        <div id="overlay" class="overlay" style="display: none;" onclick="closePopup()"></div>
+    </div>
+
+    <div>
+        <div id="imageCarousel" class="carousel slide" data-bs-touch="true">
+
+            <!-- Slides -->
+            <div class="carousel-inner">
+                {% for photo in note.photo_set.all %}
+                <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                    <img src="{{ photo.image.url }}" class="d-block w-100" alt="{{ forloop.counter }}">
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- Indicators -->
+            <div class="carousel-indicators" style="position: relative; margin-top: 10px;">
+                {% for photo in note.photo_set.all %}
+                <button type="button" data-bs-slide-to="{{ forloop.counter0 }}"
+                    {% if forloop.first %}class="active" aria-current="true"{% endif %}
+                    aria-label="Slide {{ forloop.counter }}"></button>
+                {% endfor %}
+            </div>
+        </div>
+        <div id="imageCarousel" class="carousel slide">
+
+        </div>
+    </div>
+    <div>
+        <div style="text-align: center; margin-top: 1.5rem;">
+            <p>
+                <span style="font-size: 1.2rem;">『 {{ note.title }} 』</span>
+            </p>
+        </div>
+        <div style="margin-bottom: 1rem; margin-left: 0.8rem; margin-right:0.8rem; text-align: left;">
+            <h6 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white" style="font-weight: bold;">
+                <span style="font-size: 0.6rem;">✈️</span>{{ note.content|linebreaks }}
+            </h6>
+        </div>
+        <div style="margin-bottom: 1rem; margin-left: 0.8rem; ">
+            <p class="text-sm text-gray-600 dark:text-gray-400" style="text-align: left; font-size:0.8rem; color:gray;">
+                {{ note.created_at|format_date }}
+            </p>
+        </div>
+    </div>
+
+    <!--
+    <div style="text-align: center;">
+        {% if note.author == user %}
+            <a href="{% url 'wayapp:update' pk=note.pk %}"
+            class = "btn btn-success rounded-pill btn-sm col-3">
+                Update
+            </a>
+            &nbsp
+            <button id = "del_qna" class = "btn btn-danger rounded-pill btn-sm col-3" onclick = "fn_del_qna()">Delete</button>
+        {% endif %}
+    </div> -->
+
+{% endblock %}
