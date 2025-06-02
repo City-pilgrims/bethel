@@ -1,0 +1,52 @@
+{% extends 'base_way.html' %}
+{% load bootstrap4 %}
+{% load static %}
+
+{% block content %}
+
+     <form method="post" enctype="multipart/form-data" style="text-align: center;">
+        {% csrf_token %}
+
+        <div style="margin: 0 auto; width: 80%;">
+            <label for="{{ form.title.id_for_label }}">{{ form.title.label }}</label>
+            {{ form.title }}  <!-- 제목 필드 -->
+        </div>
+        <br>
+        <div style="margin: 0 auto; width: 90%;">
+            <label for="{{ form.video.id_for_label }}">{{ form.video.label }}</label>
+            {{ form.video }}  <!-- 동영상 필드 -->
+            <video id="videoPreview" controls style="display: none; margin-top: 10px; width: 100%; max-width: 600px;">
+                <source id="videoSource" src="" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+        </div>
+        <br>
+        <button type="submit" class="btn btn-dark rounded-pill btn-sm col-4 mt-3">업로드</button>
+    </form>
+    <br>
+    <a href="{% url 'wayapp:pilvideolist' %}">목록 보기</a>
+
+    <script>
+        document.getElementById('{{ form.video.id_for_label }}').addEventListener('change', function(event) {
+            const videoPreview = document.getElementById('videoPreview');
+            const videoSource = document.getElementById('videoSource');
+            const file = event.target.files[0];
+
+            if (file) {
+                const fileURL = URL.createObjectURL(file);
+                videoSource.src = fileURL;
+                videoPreview.style.display = 'block';  // 미리보기 요소 표시
+                videoPreview.load();  // 비디오 로드
+            } else {
+                videoPreview.style.display = 'none';  // 파일이 없으면 미리보기 숨김
+            }
+        });
+    </script>
+
+    <style>
+        .center-input {
+            margin: 0 auto;  /* 입력 칸을 가운데 정렬 */
+        }
+    </style>
+
+{% endblock %}

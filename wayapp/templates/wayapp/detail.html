@@ -4,6 +4,133 @@
 {% load custom_filters %}
 
 {% block content %}
+
+    <div class="container">
+        <div class="left-box">
+            <div class="profile-header">
+                {% if note.author.profile %}
+                    <img src="{{ note.author.profile.image.url }}" alt="{{ note.author.profile.nickname }}">
+                    <h7 style="color: black;">{{ note.author.profile.nickname }}</h7>
+                {% else %}
+                    <h7 style="color: black;">{{ note.author.profile.nickname }}</h7>
+                {% endif %}
+            </div>
+        </div>
+        <div class="right-box">
+            {% if note.author == user %}
+                <div>
+                    <button style="border: none; outline: none; background: transparent; cursor:pointer;" onclick="toggleActions()">&#65049</button>
+                    <!-- Update and Delete buttons, initially hidden -->
+                    <div id="popup-actions" class="popup-actions" style="display: none;">
+                        <a href="{% url 'wayapp:update' pk=note.pk %}" class = "btn btn-success rounded-pill btn-sm col-22">Update</a>
+                        <a href="{% url 'wayapp:delete' pk=note.pk %}" class = "btn btn-danger rounded-pill btn-sm col-22" onclick="return confirmDelete();">Delete</a>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+        <!-- 팝업 오버레이 (클릭 시 닫기 가능) -->
+        <div id="overlay" class="overlay" style="display: none;" onclick="closePopup()"></div>
+    </div>
+
+    <div>
+        <div id="imageCarousel" class="carousel slide" data-bs-touch="true">
+
+            <!-- Slides -->
+            <div class="carousel-inner">
+                {% for photo in note.photo_set.all %}
+                <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                    <img src="{{ photo.image.url }}" class="d-block w-100" alt="{{ forloop.counter }}">
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- Indicators -->
+            <div class="carousel-indicators" style="position: relative; margin-top: 10px;">
+                {% for photo in note.photo_set.all %}
+                <button type="button" data-bs-slide-to="{{ forloop.counter0 }}"
+                    {% if forloop.first %}class="active" aria-current="true"{% endif %}
+                    aria-label="Slide {{ forloop.counter }}"></button>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="left-box">
+            <p>
+                <span style="font-size: 1.1rem;">『{{ note.title }}』</span>
+            </p>
+        </div>
+        <div class="right-box">
+            <div style="display: flex; gap: 15px; text-align: right; align-items: center; ">
+                <!-- 좋아요 버튼 -->
+                <form action="{% url 'wayapp:like_note' note.pk %}" method="POST">
+                    {% csrf_token %}
+                    <button type="submit" style="border: none; outline: none; background: transparent; cursor:pointer; font-size: 1.1rem;">
+                        {% if user in note.likes.all %}
+                            ❤️
+                        {% else %}
+                            🤍
+                        {% endif %}
+                    </button>
+                    <span style="font-size: 0.9rem;">{{ note.total_likes }}</span>
+                </form>
+
+                <button data-bs-toggle="modal" data-bs-target="#commentModal" style="border: none; outline: none; background: transparent; cursor:pointer; font-size: 1.2rem;">
+                    💬 <span id="comment-count-{{ note.pk }}" style="font-size: 0.9rem; margin-left:4px;">{{ note.comment.count }}</span>
+                </button>
+                <div class="modal fade" id="commentModal" tabindex="-1" aria-labelledby="commentModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h6 class="modal-title w-100 text-center" id="commentModalLabel">댓글</h6>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <!-- 댓글 목록 -->
+                                <div id="comment-list" class="comment-list">
+                                    {% for comment in note.comment.all %}
+                                        {% include 'commentapp/detail.html' with comment=comment %}
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <!-- 댓글 입력 폼-->
+                            <div style="text-align: center; max-width: 500px; margin: 4rem auto;">
+                                <form id="CommentCreationForm" data-note-id="{{ note.pk }}">
+                                    {% csrf_token %}
+                                    {% if user.is_authenticated %}
+                                        <input type="text" id="commentContent" placeholder="댓글을 입력하세요">
+                                        <button type="submit" style="border: none; outline: none; background: transparent; cursor:pointer; font-size: 1.4rem;">
+                                            ✔️
+                                        </button>
+                                    {% else %}
+                                        <a href="{% url 'accountapp:login' %}?next={{ request.path }}"
+                                           class="btn btn-dark rounded-pill col-12 mt-2">
+                                            Login
+                                        </a>
+                                    {% endif %}
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <a href="{% url 'wayapp:list' %}" style="text-decoration-line: none; display: flex; align-items: center;">
+                    👀
+                </a>
+            </div>
+        </div>
+    </div>
+    <div>
+        <div class="word-wrap" style="margin-bottom: 1rem; margin-left: 0.8rem; margin-right:0.8rem; text-align: left;">
+            <span style="font-size:1rem; font-weight: bold;">{{ note.content|linebreaks }}</span>
+        </div>
+        <div style="margin-bottom: 1rem; margin-left: 0.8rem; ">
+            <p class="text-sm text-gray-600 dark:text-gray-400" style="text-align: left; font-size:0.8rem; color:gray;">
+                {{ note.created_at|format_date }}
+            </p>
+        </div>
+    </div>
+
+
     <style>
         .carousel-item {
             transition: transform 0.2s ease-in-out !important;
@@ -40,21 +167,24 @@
         .container {
             display: flex; /* 자식 요소들을 수평으로 배치 */
             justify-content: center; /* 자식 요소들 사이의 공간을 고르게 분배 */
-            align-items: center;
         }
 
         .left-box {
             width: 50%; /* 왼쪽 구역의 너비 */
-            padding: 10px;
+            padding: 5px;
+            text-align: left;
         }
 
         .right-box {
+            display: flex;
             width: 50%; /* 오른쪽 구역의 너비 */
-            padding: 10px;
+            /*padding: 5px;*/
             text-align: right;
+            justify-content: flex-end; /* 아래 정렬 */
+            align-items: center; /* 요소가운데 정렬 */
         }
 
-         /* 팝업 버튼 스타일 */
+         /* 팝업 버튼 스타일1 */
         .popup-actions {
             display: none; /* 초기에는 숨겨놓음 */
             position: absolute;
@@ -87,9 +217,43 @@
             z-index: 980; /* 팝업 뒤로 숨겨짐 */
             display: none;
         }
+
+        .word-wrap {
+            white-space: normal;       /* 줄 바꿈을 유지하되 단어가 길어지면 줄 바꿈 */
+            word-wrap: break-word;       /* 긴 단어가 줄을 넘지 않도록 강제로 줄 바꿈 */
+            word-break: keep-all;       /* 단어가 너무 길면 중간에서 강제로 줄 바꿈 */
+        }
+
+        .comment-list {
+            overflow-y: auto;  /* 스크롤 가능 */
+        }
+
+        .modal-dialog {
+            max-height: 80%; /* 모달 높이 제한 */
+            height: 80%; /* 전체 화면 높이의 80%로 설정 */
+            overflow-y: auto; /* 내용이 넘치면 스크롤을 추가 */
+        }
+
+        .modal-content {
+            height: 100%; /* modal-dialog 안에서의 높이를 100%로 설정 */
+        }
+
+        .modal-body {
+            height: calc(100% - 100px); /* 모달 본문이 100px의 헤더를 제외한 공간을 차지하도록 설정 */
+            overflow-y: auto; /* 내용이 길어질 경우 스크롤 */
+        }
+        /*
+        .fixed-comment-footer {
+            position: sticky;
+            bottom: 0;
+            background-color: white;
+            padding: 5px 10px;
+            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+        }*/
     </style>
 
     <script>
+        //////////////////터치 및 스와이프로 캐러셀 제어하는 스크립트////////////////////
         document.addEventListener("DOMContentLoaded", function () {
             const carousel = document.getElementById("imageCarousel");
             let startX = 0; // 터치 시작 지점
@@ -123,7 +287,7 @@
             });
         });
 
-        // Toggle visibility of update and delete buttons
+        ////////////////// Toggle visibility of update and delete buttons //////////////
         function toggleActions() {
             var popup = document.getElementById("popup-actions");
             var overlay = document.getElementById("overlay");
@@ -138,104 +302,169 @@
             }
         }
 
-        // 팝업을 닫는 함수 (오버레이 클릭 시)
+        ////////////////// 팝업을 닫는 함수 (오버레이 클릭 시) /////////////////
         function closePopup() {
-            var popup = document.getElementById("popup-actions");
-            var overlay = document.getElementById("overlay");
-
-            popup.style.display = "none";
-            overlay.style.display = "none";
+            document.getElementById("popup-actions").style.display = "none";
+            document.getElementById("overlay").style.display = "none";
         }
 
         function confirmDelete() {
             return confirm("삭제하시겠습니까?");
         }
+
+        function openCommentPopup() {
+            document.getElementById("commentPopup").style.display = "block";
+        }
+
+        function closeCommentPopup() {
+            document.getElementById("commentPopup").style.display = "none";
+        }
+
+        ////////////////// 댓글 작성하기 위한 스크립트 /////////////////////////
+        document.addEventListener("DOMContentLoaded", function() {
+            const commentCreateUrl = "{% url 'commentapp:create' %}"; // Django URL
+
+            function submitComment(event, notepk) {
+                event.preventDefault();
+                let content = document.getElementById("commentContent").value;
+                let csrfToken = document.querySelector("[name=csrfmiddlewaretoken]").value; // CSRF 토큰 가져오기
+
+                fetch(commentCreateUrl, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRFToken": csrfToken
+                    },
+                    body: JSON.stringify({ note_pk: notepk, content: content })
+                })
+
+                //서버 응답 처리 (서버응답을 json으로 변환)
+                .then(response => response.json())
+                .then(data => {
+                    console.log("서버 응답:", data); // 디버깅용(지워도 됨)
+                    if (data.success) {
+                        let commentList = document.getElementById("comment-list");
+
+                        // 새로운 댓글 요소 생성 (기존 템플릿과 동일한 구조 유지)
+                        let newComment = document.createElement("div");
+                        newComment.id = `comment-${data.comment_id}`; // 고유 ID 설정
+                        newComment.style.border = "1px solid #bbb";
+                        newComment.style.padding = "1%";
+                        newComment.style.margin = "0.5rem 0";
+                        newComment.style.borderRadius = "1rem";
+                        newComment.style.textAlign = "left";
+
+                        newComment.innerHTML = `
+                            <strong style="font-size: 0.8rem; margin-left: 0.6rem;">
+                                ${data.author}
+                            </strong>
+                            &nbsp;&nbsp;&nbsp;
+                            <span class="text-sm text-gray-600 dark:text-gray-400" style="font-size:0.8rem; color:gray;">
+                                ${data.created_at}  <!-- 날짜 형식 Django와 동일하게 -->
+                            </span>
+                            <div class="container-comment" style="display: flex; align-items: center; justify-content: space-between;">
+                                <div class="left-box-comment">
+                                    ${data.content.replace(/\n/g, "<br>")} <!-- 줄바꿈 처리 -->
+                                </div>
+                                <div class="right-box-comment">
+                                    <button class="delete-comment-btn" data-comment-id="${data.comment_id}" style="text-decoration: none; background: none; border: none; cursor: pointer; font-size: 1rem;">
+                                        ❌
+                                    </button>
+                                </div>
+                            </div>
+                        `;
+
+                        // 새 댓글을 목록에 추가
+                        commentList.appendChild(newComment);
+
+                        // 입력 필드 초기화 (댓글이 성공적으로 등록되면 입력필드 비움)
+                        document.getElementById("commentContent").value = "";
+
+                        // 댓글 카운트 업데이트
+                        let commentCountElement = document.getElementById(`comment-count-${notepk}`);
+                        if (commentCountElement) {
+                            let currentCount = parseInt(commentCountElement.innerText);
+                            commentCountElement.innerText = currentCount + 1; // 카운트 증가
+                        }
+
+                    } else {
+                        console.error("댓글 저장 실패:", data.error);
+                    }
+                })
+                .catch(error => {
+                    console.error("서버 요청 오류:", error);
+                });
+            }
+
+            // 폼이 제출될 때 이벤트 리스너 추가
+            document.getElementById("CommentCreationForm").addEventListener("submit", function(event) {
+                let notepk = this.getAttribute("data-note-id"); // HTML에서 note의 ID 가져오기
+                submitComment(event, notepk);
+            });
+
+           // 이벤트 위임을 사용하여 삭제 버튼 클릭 이벤트 처리**
+            document.getElementById("comment-list").addEventListener("click", function (event) {
+                if (event.target.classList.contains("delete-comment-btn")) {
+                    event.preventDefault();
+                    const commentId = event.target.getAttribute('data-comment-id');
+                    if (commentId) {
+                        deleteComment(commentId);
+                    } else {
+                        console.error('Comment ID is missing');
+                    }
+                }
+            });
+
+            // 댓글 삭제 함수**
+            function deleteComment(commentId) {
+                console.log("삭제 버튼 클릭됨, commentId:", commentId);
+
+                let csrfToken = document.querySelector("[name=csrfmiddlewaretoken]").value;
+
+                // URL을 동적으로 생성
+                let commentDeleteUrl = "{% url 'commentapp:delete' 0 %}".replace("0", commentId);
+                console.log("Delete URL: ", commentDeleteUrl);
+
+                fetch(commentDeleteUrl, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRFToken": csrfToken
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log("서버 응답:", data); // 디버깅용(지워도 됨)
+                    if (data.success) {
+
+                        // 댓글 요소를 찾아 삭제
+                        let commentElement = document.getElementById(`comment-${commentId}`);
+                        if (commentElement) {
+                            commentElement.remove();
+                        } else {
+                            console.warn("댓글 요소를 찾을 수 없음:", `comment-${commentId}`);
+                        }
+
+                        // 댓글 카운트 업데이트
+                        let notePk = data.note_pk;
+                        let commentCountElement = document.getElementById(`comment-count-${notePk}`);
+
+                        if (commentCountElement) {
+                            let currentCount = parseInt(commentCountElement.textContent, 10);
+                            if (currentCount > 0) {
+                                commentCountElement.textContent = (currentCount - 1).toString(); // 댓글 수 감소
+                            }
+                       }
+                    } else {
+                        alert("댓글 삭제에 실패했습니다.");
+                    }
+                })
+                .catch(error => {
+                    console.error("삭제 요청 중 에러 발생:", error);
+                });
+            }
+        });
+
     </script>
-
-    <script type="text/javascript">
-
-    </script>
-
-    <div class="container">
-        <div class="left-box">
-            <div class="profile-header">
-                {% if note.author.profile %}
-                    <img src="{{ note.author.profile.image.url }}" alt="{{ note.author.profile.nickname }}">
-                    <h7 style="color: black;">{{ note.author.profile.nickname }}</h7>
-                {% else %}
-                    <h7 style="color: black;">{{ note.author.profile.nickname }}</h7>
-                {% endif %}
-            </div>
-        </div>
-        <div class="right-box">
-            {% if note.author == user %}
-                <div class="post-actions">
-                    <button style="border: none; outline: none; background: transparent; cursor:pointer;" onclick="toggleActions()">&#65049</button>
-                    <!-- Update and Delete buttons, initially hidden -->
-                    <div id="popup-actions" class="popup-actions" style="display: none;">
-                        <a href="{% url 'wayapp:update' pk=note.pk %}" class = "btn btn-success rounded-pill btn-sm col-22">Update</a>
-                        <a href="{% url 'wayapp:delete' pk=note.pk %}" class = "btn btn-danger rounded-pill btn-sm col-22" onclick="return confirmDelete();">Delete</a>
-                    </div>
-                </div>
-            {% endif %}
-        </div>
-        <!-- 팝업 오버레이 (클릭 시 닫기 가능) -->
-        <div id="overlay" class="overlay" style="display: none;" onclick="closePopup()"></div>
-    </div>
-
-    <div>
-        <div id="imageCarousel" class="carousel slide" data-bs-touch="true">
-
-            <!-- Slides -->
-            <div class="carousel-inner">
-                {% for photo in note.photo_set.all %}
-                <div class="carousel-item {% if forloop.first %}active{% endif %}">
-                    <img src="{{ photo.image.url }}" class="d-block w-100" alt="{{ forloop.counter }}">
-                </div>
-                {% endfor %}
-            </div>
-
-            <!-- Indicators -->
-            <div class="carousel-indicators" style="position: relative; margin-top: 10px;">
-                {% for photo in note.photo_set.all %}
-                <button type="button" data-bs-slide-to="{{ forloop.counter0 }}"
-                    {% if forloop.first %}class="active" aria-current="true"{% endif %}
-                    aria-label="Slide {{ forloop.counter }}"></button>
-                {% endfor %}
-            </div>
-        </div>
-        <div id="imageCarousel" class="carousel slide">
-
-        </div>
-    </div>
-    <div>
-        <div style="text-align: center; margin-top: 1.5rem;">
-            <p>
-                <span style="font-size: 1.2rem;">『 {{ note.title }} 』</span>
-            </p>
-        </div>
-        <div style="margin-bottom: 1rem; margin-left: 0.8rem; margin-right:0.8rem; text-align: left;">
-            <h6 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white" style="font-weight: bold;">
-                <span style="font-size: 0.6rem;">✈️</span>{{ note.content|linebreaks }}
-            </h6>
-        </div>
-        <div style="margin-bottom: 1rem; margin-left: 0.8rem; ">
-            <p class="text-sm text-gray-600 dark:text-gray-400" style="text-align: left; font-size:0.8rem; color:gray;">
-                {{ note.created_at|format_date }}
-            </p>
-        </div>
-    </div>
-
-    <!--
-    <div style="text-align: center;">
-        {% if note.author == user %}
-            <a href="{% url 'wayapp:update' pk=note.pk %}"
-            class = "btn btn-success rounded-pill btn-sm col-3">
-                Update
-            </a>
-            &nbsp
-            <button id = "del_qna" class = "btn btn-danger rounded-pill btn-sm col-3" onclick = "fn_del_qna()">Delete</button>
-        {% endif %}
-    </div> -->
 
 {% endblock %}

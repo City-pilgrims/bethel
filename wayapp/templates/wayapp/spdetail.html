@@ -1,0 +1,168 @@
+{% extends 'base_way.html' %}
+{% load bootstrap4 %}
+{% load static %}
+{% load custom_filters %}
+
+{% block content %}
+
+    <div class="container">
+        <div class="left-box">
+            <div class="profile-header">
+                {% if special_pilgrim.author.profile %}
+                    <img src="{{ special_pilgrim.author.profile.image.url }}" alt="{{ special_pilgrim.author.profile.nickname }}">
+                    <h7 style="color: black;">{{ special_pilgrim.author.profile.nickname }}</h7>
+                {% else %}
+                    <h7 style="color: black;">{{ special_pilgrim.author.profile.nickname }}</h7>
+                {% endif %}
+            </div>
+        </div>
+        <div class="right-box">
+            {% if special_pilgrim.author == user %}
+                <div>
+                    <button style="border: none; outline: none; background: transparent; cursor:pointer;" onclick="toggleActions()">
+                        &#65049
+                    </button>
+                    <!-- Update and Delete buttons, initially hidden -->
+                    <div id="popup-actions" class="popup-actions" style="display: none;">
+                        <a href="{% url 'wayapp:spupdate' pk=special_pilgrim.pk %}" class = "btn btn-success rounded-pill btn-sm col-22">Update</a>
+                        <a href="{% url 'wayapp:spdelete' pk=special_pilgrim.pk %}" class = "btn btn-danger rounded-pill btn-sm col-22" onclick="return confirmDelete();">Delete</a>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+        <!-- 팝업 오버레이 (클릭 시 닫기 가능) -->
+        <div id="overlay" class="overlay" style="display: none;" onclick="closePopup()"></div>
+    </div>
+
+    <a href="{% url 'wayapp:splist' %}" style="text-decoration-line: none;">
+        <p style="font-family: NanumDdoBagDdoBag; font-weight: bold; font-size: 2rem; color: black;">{{ special_pilgrim.group }} 순례 기록</p>
+    </a>
+    <div>
+        {% for image, description in image_description_pairs %}
+            <div style="margin-bottom: 2rem;">
+                <div class="word-wrap" style="margin: 0.5rem 0.7rem auto 0.7rem; text-align: left;"> <!--margin up, right, down, left-->
+                    <p class="card-text">
+                        {{ description.text|linebreaks }}
+                    </p>
+                </div>
+                <img src="{{ image.image.url }}" alt="이미지" class="card-img-top" style="border-radius: 10px;">
+                <br>
+            </div>
+        {% empty %}
+            <div class="col-12">
+                <p class="text-center">등록된 이미지와 설명이 없습니다.</p>
+            </div>
+        {% endfor %}
+        <div style="display: flex; justify-content: flex-end; align-items: center; margin-bottom: 1rem; margin-right: 1.5rem;">
+            <p class="text-sm text-gray-600 dark:text-gray-400" style="font-size:0.8rem; color:gray; margin: 0; margin-right: 1.5rem;">
+                {{ special_pilgrim.created_at|format_date }}
+            </p>
+            <a href="{% url 'wayapp:splist' %}" style="text-decoration-line: none; display: flex; align-items: center;">
+                👀
+            </a>
+        </div>
+    </div>
+
+
+    <!------------------------------------------------------------------------------------>
+    <!------------------------------------------------------------------------------------>
+    <style>
+
+        .container {
+            display: flex; /* 자식 요소들을 수평으로 배치 */
+            justify-content: center; /* 자식 요소들 사이의 공간을 고르게 분배 */
+        }
+
+        .left-box {
+            width: 50%; /* 왼쪽 구역의 너비 */
+            padding: 5px;
+            text-align: left;
+        }
+
+        .right-box {
+            display: flex;
+            width: 50%; /* 오른쪽 구역의 너비 */
+            /*padding: 5px;*/
+            text-align: right;
+            justify-content: flex-end; /* 아래 정렬 */
+            align-items: center; /* 요소가운데 정렬 */
+        }
+
+         /* 팝업 버튼 스타일1 */
+        .popup-actions {
+            display: none; /* 초기에는 숨겨놓음 */
+            position: absolute;
+            padding: 10px;
+            z-index: 990; /* 팝업이 다른 콘텐츠 위에 표시되도록 */
+            /*border: 1px solid #ccc;
+            background-color: #fff;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);*/
+
+            top: 18%;
+            left: 68%;
+        }
+
+        .popup-actions a {
+            display: block;
+            margin: 10px 0;
+            padding: 10px 20px;
+            text-decoration: none;
+            color: white;
+        }
+
+        /* 오버레이 스타일 */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 40%;
+            background-color: rgba(0, 0, 0, 0.5); /* 반투명 검은색 */
+            z-index: 980; /* 팝업 뒤로 숨겨짐 */
+            display: none;
+        }
+
+        .word-wrap {
+            white-space: normal;       /* 줄 바꿈을 유지하되 단어가 길어지면 줄 바꿈 */
+            word-wrap: break-word;       /* 긴 단어가 줄을 넘지 않도록 강제로 줄 바꿈 */
+            word-break: keep-all;       /* 단어가 너무 길면 중간에서 강제로 줄 바꿈 */
+        }
+
+    </style>
+
+    <script>
+        ////////////////// Toggle visibility of update and delete buttons //////////////
+        function toggleActions() {
+            var popup = document.getElementById("popup-actions");
+            var overlay = document.getElementById("overlay");
+
+            // 팝업 열기
+            if (popup.style.display === "none" || popup.style.display === "") {
+                popup.style.display = "block";
+                overlay.style.display = "block"; // 오버레이도 보이게
+            } else {
+                popup.style.display = "none";
+                overlay.style.display = "none"; // 오버레이 숨기기
+            }
+        }
+
+        ////////////////// 팝업을 닫는 함수 (오버레이 클릭 시) /////////////////
+        function closePopup() {
+            document.getElementById("popup-actions").style.display = "none";
+            document.getElementById("overlay").style.display = "none";
+        }
+
+        function confirmDelete() {
+            return confirm("삭제하시겠습니까?");
+        }
+
+        function openCommentPopup() {
+            document.getElementById("commentPopup").style.display = "block";
+        }
+
+        function closeCommentPopup() {
+            document.getElementById("commentPopup").style.display = "none";
+        }
+    </script>
+
+{% endblock %}

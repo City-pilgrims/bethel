@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% load bootstrap4 %}
+
+{% block content %}
+
+    <div style="text-align: center; max-width: 500px; margin: 4rem auto;">
+        <div>
+            <br>
+            <h4>"{{ target_comment.content }}" <br>댓글 삭제할까요?</h4>
+            <br>
+        </div>
+        <form action="{% url 'commentapp:delete' pk=target_comment.pk %}" method="post">
+            {% csrf_token %}
+            {% bootstrap_form form %}
+            <input type="submit" class="btn btn-danger rounded-pill col-3 mt-3">
+        </form>
+    </div>
+
+{% endblock %}

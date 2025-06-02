@@ -26,3 +26,8 @@ def format_date(value):
         return f"{delta.days}일 전"
     else:
         return value.strftime("%m월 %d일")  # 'MM-DD' 형식으로 변환
+
+
+@register.filter
+def zip_lists(a, b):
+    return zip(a, b)

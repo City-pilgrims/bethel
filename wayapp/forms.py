@@ -1,6 +1,6 @@
 from os.path import splitext
 
-from PIL import Image, ImageSequence
+from PIL import Image, ExifTags
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Submit
 from django import forms
@@ -10,7 +10,7 @@ from django.core.files import File
 from django.core.files.base import ContentFile
 from django.forms import BaseInlineFormSet, inlineformset_factory
 
-from wayapp.models import Note, Photo
+from wayapp.models import Note, Photo, PilgrimVideo
 
 
 class MultipleFileInput(forms.ClearableFileInput):
@@ -32,28 +32,55 @@ def make_thumb(
         image_file: File, max_width: int = 1024, max_height: int = 1024, quality=80
 ) -> File:
     pil_image = Image.open(image_file)
-    max_size = (max_width, max_height)
-    pil_image.thumbnail(max_size)
-    img_format = pil_image.format
+    # EXIF 데이터 가져오기
+    exif = pil_image.getexif()
+    if exif is None:
+        pil_image_rev = pil_image
 
-    if img_format == "GIF":
+    else:
+        # EXIF Orientation 태그 찾기
+        for tag, value in ExifTags.TAGS.items():
+            if value == "Orientation":
+                orientation_tag = tag
+                break
+        else:
+            pil_image_rev = pil_image
+            return pil_image_rev  # Orientation 태그가 없으면 원본 유지
+
+        orientation = exif.get(orientation_tag, None)
+
+        # Orientation 값에 따른 회전
+        if orientation == 3:
+            pil_image_rev = pil_image.rotate(180, expand=True)
+        elif orientation == 6:
+            pil_image_rev = pil_image.rotate(270, expand=True)
+        elif orientation == 8:
+            pil_image_rev = pil_image.rotate(90, expand=True)
+        else:
+            pil_image_rev = pil_image
+
+    max_size = (max_width, max_height)
+    pil_image_rev.thumbnail(max_size)
+    img_format = pil_image_rev.format
+
+    if img_format == "GIF" or "gif":
         image_data = image_file.read()
-        #frames = [frame.copy() for frame in ImageSequence.Iterator(image_data)]
+        # frames = [frame.copy() for frame in ImageSequence.Iterator(image_data)]
         thumb_file = ContentFile(image_data, name=image_file.name)
-        pil_image.save(thumb_file)
+        pil_image_rev.save(thumb_file)
         return thumb_file
     else:
         # 만약 이미지가 RGBA(알파 채널 포함) 모드라면 RGB 모드로 변환
-        if pil_image.mode == "RGBA":
-            pil_image = pil_image.convert("RGB")
+        if pil_image_rev.mode == "RGBA":
+            pil_image_rev = pil_image_rev.convert("RGB")
 
-        thumb_name = splitext(image_file.name)[0] + ".jpg" # Splittext(os.path)는 파일 이름에서 확장자를 분리하는데 활용
+        thumb_name = splitext(image_file.name)[0] + ".jpg"  # Splittext(os.path)는 파일 이름에서 확장자를 분리하는데 활용
 
         # 썸네일 파일 생성: 비어있는 ContentFile 객체 생성 후 이름 설정, ContentFile(django.core.files.base.ContentFile)은 파일 이름을 받아 파일 객체처럼 사용
         thumb_file = ContentFile(b"", name=thumb_name)
 
         # PIL을 사용하여 이미지를 JPEG 형식으로 저장하고 지정된 품질로 설정
-        pil_image.save(thumb_file, format="jpeg", quality=quality)
+        pil_image_rev.save(thumb_file, format="jpeg", quality=quality)
 
         return thumb_file
 
@@ -118,6 +145,23 @@ class CustomBaseInlineFormSet(BaseInlineFormSet):
             form.fields["DELETE"].widget = forms.HiddenInput()
 
 
+class VideoForm(forms.ModelForm):
+    class Meta:
+        model = PilgrimVideo
+        fields = ['title', 'video']
+        labels = {
+            'title': '동영상 제목',  # 제목 변경
+            'video': '동영상 파일'
+        }
+        widgets = {
+            'title': forms.TextInput(attrs={
+                'class': 'form-control center-input',  # Bootstrap 스타일 적용 가능
+                'style': 'width: 80%; height: 40px;',  # 입력 창 크기 조절
+                'placeholder': '제목을 입력하세요'  # 힌트 텍스트 추가
+            }),
+        }
+
+
 PhotoUpdateFormSet = inlineformset_factory(
     parent_model=Note,
     model=Photo,
@@ -128,4 +172,3 @@ PhotoUpdateFormSet = inlineformset_factory(
 )
 PhotoUpdateFormSet.helper = FormHelper()
 PhotoUpdateFormSet.helper.form_tag = False
-

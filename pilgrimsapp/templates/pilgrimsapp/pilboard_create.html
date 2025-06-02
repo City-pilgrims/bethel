@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% load bootstrap4 %}
+{% load static %}
+
+{% block content %}
+    <style>
+        .preview-container {
+            margin-top: 10px;
+        }
+        .preview-container img {
+            max-width: 200px;
+            height: auto;
+            border-radius: 8px;
+            display: none; /* 기본적으로 숨김 */
+        }
+    </style>
+
+    <form method="post" enctype="multipart/form-data" class="text-center">
+        {% csrf_token %}
+
+        <div class="d-flex flex-column align-items-center">
+            {% bootstrap_form form %}
+
+            <!-- 이미지 미리보기 -->
+            <div class="preview-container mt-3">
+                <img id="image-preview" alt="이미지 미리보기" style="max-width: 400px; height: auto; display: none; border-radius: 8px;">
+            </div>
+
+            <button type="submit" class="btn btn-dark rounded-pill btn-sm col-4 mt-3">업로드</button>
+        </div>
+    </form>
+    <br>
+    <a href="{% url 'pilgrimsapp:pilboardlist' %}">목록 보기</a>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const imageInput = document.querySelector("#id_image");  // Django 폼에서 이미지 필드의 ID
+            const imagePreview = document.querySelector("#image-preview");
+
+            imageInput.addEventListener("change", function(event) {
+                const file = event.target.files[0];  // 선택된 파일 가져오기
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        imagePreview.src = e.target.result;
+                        imagePreview.style.display = "block";  // 이미지 보이기
+                    }
+                    reader.readAsDataURL(file);  // 파일을 읽어 Data URL로 변환
+                } else {
+                    imagePreview.style.display = "none";  // 파일이 없으면 숨김
+                }
+            });
+        });
+    </script>
+
+{% endblock %}

@@ -1,0 +1,178 @@
+{% extends 'base.html' %}
+{% load bootstrap4 %}
+{% load static %}
+{% load custom_filters %}
+
+{% block content %}
+
+    <div class="container">
+        <div class="left-box">
+            <div class="profile-header">
+                {% if pilboard.author.profile %}
+                    <img src="{{ pilboard.author.profile.image.url }}"
+                         alt="{{ pilboard.author.profile.nickname }}" style="height: 20px; width: 20px;">
+                    <span style="color: black; font-size: 0.7rem;">{{ pilboard.author.profile.nickname }}</span>
+                    &nbsp∙&nbsp
+                    <p class="text-sm text-gray-600 dark:text-gray-400" style="font-size:0.7rem; color:gray; margin: 0; margin-right: 1.5rem;">
+                        {{ pilboard.created_at|format_date }}
+                    </p>
+                {% else %}
+                    <h7 style="color: black;">{{ pilboard.author.profile.nickname }}</h7>
+                {% endif %}
+            </div>
+        </div>
+        <div class="right-box">
+            {% if pilboard.author == user %}
+                <div>
+                    <button style="border: none; outline: none; background: transparent; cursor:pointer;" onclick="toggleActions(event)">
+                        <img src="{% static 'edit_post.jpg' %}" alt="post"
+                            style="width: 22px; height: 22px; cursor: pointer;">
+                    </button>
+                    <!-- Update and Delete buttons, initially hidden -->
+                    <div id="popup-actions" class="popup-actions" style="display: none;">
+                        <a href="{% url 'pilgrimsapp:pilboardupdate' pk=pilboard.pk %}" class = "btn btn-success rounded-pill btn-sm col-22">업데이트</a>
+                        <a href="{% url 'pilgrimsapp:pilboarddelete' pk=pilboard.pk %}" class = "btn btn-danger rounded-pill btn-sm col-22" onclick="return confirmDelete();">삭제</a>
+                    </div>
+                </div>
+                &nbsp
+                <div>
+                    <a href="{% url 'pilgrimsapp:pilboardlist' %}" style="text-decoration-line: none; display: flex; align-items: center;">
+                        👀
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+        <!-- 팝업 오버레이 (클릭 시 닫기 가능) -->
+        <div id="overlay" class="overlay" style="display: none;" onclick="closePopup()"></div>
+    </div>
+    <div class="container-content">
+        <div class="word-wrap">
+            <p>{{ pilboard.content|linebreaks }}</p>
+        </div>
+
+        <div>
+            {% if pilboard.image %}
+                <img src="{{ pilboard.image.url }}" alt="Image" >
+            {% endif %}
+        </div>
+    </div>
+
+
+    <style>
+
+        .container {
+            display: flex; /* 자식 요소들을 수평으로 배치 */
+            justify-content: flex-start; /* 자식 요소들 사이의 공간을 고르게 분배 */
+            margin-bottom: 1.0rem;
+        }
+
+        .left-box {
+            width: 55%; /* 왼쪽 구역의 너비 */
+            padding: 5px;
+            text-align: left;
+        }
+
+        .right-box {
+            display: flex;
+            width: 45%; /* 오른쪽 구역의 너비 */
+            /*padding: 5px;*/
+            text-align: right;
+            justify-content: flex-end; /* 아래 정렬 */
+            align-items: center; /* 요소가운데 정렬 */
+        }
+
+        .container-content {
+            width: 90%;
+            margin: 0 auto;  /* Centering the container */
+            justify-content: flex-start;
+            text-align: left;
+        }
+
+        .container-content img {
+            width: 100%;
+            margin: 0 auto;  /* Centering the container */
+            text-align: center;
+        }
+
+         /* 팝업 버튼 스타일1 */
+        .popup-actions {
+            display: none; /* 초기에는 숨겨놓음 */
+            position: absolute;
+            padding: 10px;
+            z-index: 990; /* 팝업이 다른 콘텐츠 위에 표시되도록 */
+            /*border: 1px solid #ccc;
+            background-color: #fff;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);*/
+
+            top: 55%;
+            left: 68%;
+        }
+
+        .popup-actions a {
+            display: block;
+            margin: 10px 0;
+            padding: 10px 20px;
+            text-decoration: none;
+            color: white;
+        }
+
+        /* 오버레이 스타일 */
+        .overlay {
+            position: fixed;
+            top: 50%;
+            left: 0;
+            width: 100%;
+            height: 30%;
+            background-color: rgba(0, 0, 0, 0.5); /* 반투명 검은색 */
+            z-index: 980; /* 팝업 뒤로 숨겨짐 */
+            display: none;
+        }
+
+        .word-wrap {
+            white-space: normal;       /* 줄 바꿈을 유지하되 단어가 길어지면 줄 바꿈 */
+            word-wrap: break-word;       /* 긴 단어가 줄을 넘지 않도록 강제로 줄 바꿈 */
+            word-break: keep-all;       /* 단어가 너무 길면 중간에서 강제로 줄 바꿈 */
+        }
+    </style>
+
+    <script>
+        ////////////////// Toggle visibility of update and delete buttons //////////////
+        function toggleActions(event) {
+            var popup = document.getElementById("popup-actions");
+            var overlay = document.getElementById("overlay");
+
+            // 클릭된 버튼의 위치 가져오기
+            var rect = event.currentTarget.getBoundingClientRect();
+            var topPosition = rect.top + window.scrollY; // 버튼의 화면상 Y 위치
+            var leftPosition = rect.left + window.scrollX; // 버튼의 화면상 X 위치
+
+            // 팝업 위치 조정
+            popup.style.top = `${topPosition + 40}px`;  // 버튼 바로 아래 배치
+            popup.style.left = `${leftPosition - 80}px`;  // 버튼과 같은 X 위치
+            popup.style.display = "block";
+
+            // 오버레이 위치 조정
+            overlay.style.top = `${topPosition}px`;
+            overlay.style.display = "block";
+        }
+
+        ////////////////// 팝업을 닫는 함수 (오버레이 클릭 시) /////////////////
+        function closePopup() {
+            document.getElementById("popup-actions").style.display = "none";
+            document.getElementById("overlay").style.display = "none";
+        }
+
+        function confirmDelete() {
+            return confirm("삭제하시겠습니까?");
+        }
+
+        function openCommentPopup() {
+            document.getElementById("commentPopup").style.display = "block";
+        }
+
+        function closeCommentPopup() {
+            document.getElementById("commentPopup").style.display = "none";
+        }
+    </script>
+
+{% endblock %}

@@ -18,7 +18,38 @@
             text-decoration-line: none;
             font-weight: bold;
         }
+
+        #menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            right: 35%;
+            background-color: rgba(0, 0, 0, 0.5);
+            width: 150px;
+            padding: 5px;
+            border-radius: 5px;
+            transition: all 0.3s ease-in-out;
+        }
+
+        #menu a {
+            display: block;
+            color: white;
+            text-decoration: none;
+            padding: 5px;
+            margin-bottom: 5px;
+            border-radius: 5px;
+        }
+
+        #menu a:hover {
+            background-color: #575757;
+        }
+
+        #menu.show {
+            display: block;
+        }
     </style>
+
+
 
     <div class="bethel_header" style="height: 100px;">
         <div style="margin-bottom: 20px; color: #800020;">
@@ -26,32 +57,55 @@
         </div>
         <div>
             <a href="{% url 'pilgrimsapp:intro' %}">
-                <span>Pilgrims</span>
+                <span>ANChurch</span>
             </a>&nbsp
             <a href="{% url 'truthapp:index' %}">
                 <span>Truth</span>
             </a>&nbsp
-            <a href="{% url 'wayapp:list' %}">
-                <span>Way</span>
-            </a>&nbsp
+
+            <button id="menu-toggle" style="color: black; border: none; background-color: transparent; font-weight: bold;"><span>Way</span></button>
+            <div id="menu" class="menu">
+                <a href="{% url 'wayapp:list' %}">매일 순례</a>
+                <a href="{% url 'wayapp:splist' %}">특별 순례</a>
+                <a href="{% url 'wayapp:pilvideolist' %}">순례 영상</a>
+            </div>
+            &nbsp
             <a href="{% url 'lifeapp:list' %}">
                 <span>Life</span>
+            </a>&nbsp
+            <a href="{% url 'pilgrimsapp:pilboardlist' %}">
+                <span>Pilgrim</span>
             </a>&nbsp
 
             {% if not user.is_authenticated %}
                 <a href="{% url 'accountapp:login' %}?next={{ request.path }}">
                     <span>Login</span>
                 </a>&nbsp
-                <a href="{% url 'accountapp:create' %}">
-                    <span>SignUp</span>
-                </a>
             {% else %}
                 <a href="{% url 'accountapp:detail' pk=user.pk %}">
                     <span>MyPage</span>
                 </a>&nbsp
-                <a href="{% url 'accountapp:logout' %}?next={{ request.path }}">
-                    <span>Logout</span>
-                </a>
             {% endif %}
         </div>
     </div>
+
+    <script>
+        // 메뉴를 열고 닫는 기능
+        const menuToggle = document.getElementById('menu-toggle');
+        const menu = document.getElementById('menu');
+
+        // 메뉴 버튼 클릭 시 메뉴 열기/닫기
+        menuToggle.addEventListener('click', function(event) {
+            menu.classList.toggle('show');
+            // 메뉴 버튼 클릭 시 이벤트 전파를 막음
+            event.stopPropagation();
+        });
+
+        // 다른 영역 클릭 시 메뉴 닫기
+        document.addEventListener('click', function(event) {
+            // 클릭한 대상이 메뉴나 메뉴 버튼이 아니면 메뉴를 닫기
+            if (!menu.contains(event.target) && event.target !== menuToggle) {
+                menu.classList.remove('show');
+            }
+        });
+    </script>

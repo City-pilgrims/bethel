@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% load bootstrap4 %}
+{% load static %}
+{% load custom_filters %}
+
+{% block content %}
+
+    <div style="text-align: right; margin-top: 100px; margin-bottom: 1rem; margin-right: 1.2rem;">
+        <a href="{% url 'pilgrimsapp:pilboardcreate' %}">
+            <img src="{% static 'Pilgrim_post2.png' %}" alt="post"
+                 style="width: 22px; height: 22px; cursor: pointer;">
+        </a>
+    </div>
+
+    {% for pilboard in pilboards %}
+        <div class="container">
+            <div class="profile-header">
+                {% if pilboard.author.profile %}
+                    <img src="{{ pilboard.author.profile.image.url }}"
+                         alt="{{ pilboard.author.profile.nickname }}" style="height: 20px; width: 20px;">
+                    <span style="color: black; font-size: 0.7rem;">{{ pilboard.author.profile.nickname }}</span>
+                    &nbsp∙&nbsp
+                    <p class="text-sm text-gray-600 dark:text-gray-400" style="font-size:0.7rem; color:gray; margin: 0; margin-right: 1.5rem;">
+                        {{ pilboard.created_at|format_date }}
+                    </p>
+                {% else %}
+                    <h7 style="color: black;">{{ pilboard.author.profile.nickname }}</h7>
+                {% endif %}
+            </div>
+        </div>
+        <div>
+            <a href="{% url 'pilgrimsapp:pilboarddetail' pk=pilboard.pk %}" style="text-decoration-line: none; color: black;">
+                <div class="board-container">
+                    <div class="board-content">
+                        <p>{{ pilboard.content|slice:":56" }} {% if pilboard.content|length > 56 %}...{% endif %}
+                    </div>
+
+                    <div class="board-image">
+                        {% if pilboard.image %}
+                            <img src="{{ pilboard.image.url }}" alt="Image" >
+                        {% endif %}
+                    </div>
+                </div>
+            </a>
+        </div>
+    {% endfor %}
+
+
+    <style>
+        .board-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            border-bottom: 1px solid #ddd;
+            padding: 10px;
+        }
+
+        .board-content {
+            flex: 1;
+            padding-right: 20px; /* 내용과 이미지 간격 */
+            margin-left: 0.5rem;
+            text-align: left;
+        }
+
+        .board-image img {
+            max-width: 100px; /* 이미지 크기 조정 */
+            max-height: 100px;
+            border-radius: 8px;
+        }
+
+        .container {
+            display: flex; /* 자식 요소들을 수평으로 배치 */
+            justify-content: flex-start; /* 자식 요소들 사이의 공간을 고르게 분배 */
+            margin-top: 1rem;
+        }
+
+    </style>
+
+{% endblock %}

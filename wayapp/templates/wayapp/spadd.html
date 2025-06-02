@@ -1,0 +1,216 @@
+{% extends 'base_way.html' %}
+{% load bootstrap4 %}
+{% load static %}
+
+{% block content %}
+
+    <div style="text-align: center; margin-bottom: 1.2rem;">
+        <p style="font-family: NanumDdoBagDdoBag; font-weight: bold; font-size:1.8rem;">특별 순례 기록</p>
+    </div>
+    <form id="uploadForm">
+        {% csrf_token %}
+
+        <label for="pil_group" style="font-size:1.2rem;">순례지:</label>
+        <select id="pil_group" name="pil_group" onchange="toggleCustomInput(this)">
+            <option value="#">선택하세요</option>
+            <option value="Sydney">Sydney</option>
+            <option value="Ryukyu">Ryukyu</option>
+            <option value="낙동강">낙동강</option>
+            <option value="서울">서울</option>
+            <option value="DMZ">DMZ</option>
+            <option value="Israel">Israel</option>
+            <option value="Pacific">Pacific(Guam)</option>
+            <option value="custom_group">직접입력</option>
+        </select>
+        <!-- 기타 선택 시 직접 입력하는 input -->
+        <div class="uploadItem">
+            <input type="text_group" name="pil_group_custom" id="pil_group_custom" placeholder="직접입력" style="display: none;">
+        </div>
+
+        <div id="uploadContainer">
+            <div class="uploadItem">
+                <textarea type="text" name="descriptions" placeholder="설명 입력"></textarea>
+                <input type="file" name="images" accept="image/*" onchange="previewImage(event, this)">
+                <div class="preview-container"></div>
+            </div>
+        </div>
+        <button type="button" onclick="addUploadField()" class = "btn btn-success rounded-pill btn-sm col-4 mt-3">
+            사진/설명 추가
+        </button>
+        <button type="button" onclick="uploadItems()" class="btn btn-dark rounded-pill btn-sm col-4 mt-3">
+            업로드
+        </button>
+    </form>
+    <br>
+    <a href="{% url 'wayapp:splist' %}">목록 보기</a>
+
+
+    <!------------------------------------------------------------------------------------>
+    <!------------------------------------------------------------------------------------>
+    <script>
+        function getCSRFToken() {
+            return document.querySelector('input[name="csrfmiddlewaretoken"]').value;
+        }
+
+        function addUploadField() {
+            const container = document.getElementById('uploadContainer');
+            const div = document.createElement('div');
+            div.classList.add('uploadItem');
+            div.innerHTML = `
+                <textarea name="descriptions" placeholder="설명 입력" class="description-input" rows="4"></textarea>
+                <input type="file" name="images" accept="image/*" onchange="previewImage(event, this)">
+                <div class="preview-container"></div>
+                <button type="button" onclick="removeUploadField(this)" class="btn btn-danger rounded-pill btn-sm col-2 mt-2">삭제</button>
+            `;
+            container.appendChild(div);
+        }
+
+        function removeUploadField(button) {
+            button.parentElement.remove();
+        }
+
+
+        function previewImage(event, input) {
+            const previewContainer = input.nextElementSibling.nextElementSibling; // 미리보기 컨테이너
+            previewContainer.innerHTML = ''; // 기존 미리보기 삭제
+
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.alt = '미리보기';
+
+                    // 이미지 크기 조절 (JS에서 강제 적용)
+                    img.style.width = "80%";
+                    img.style.setProperty("max-width", "400px", "important");
+
+                    previewContainer.appendChild(img);
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+
+        function uploadItems() {
+            const formData = new FormData();
+            const images = document.querySelectorAll('input[name="images"]');
+            const descriptions = document.querySelectorAll('textarea[name="descriptions"]');
+            const pilGroup = document.getElementById("pil_group").value;
+            const customPilGroup = document.getElementById("pil_group_custom").value;
+
+            formData.append('pil_group', pilGroup);
+            formData.append('pil_group_custom', customPilGroup);
+
+            images.forEach((imageInput, index) => {
+                if (imageInput.files.length > 0) {
+                    formData.append('images', imageInput.files[0]);
+                    formData.append('descriptions', descriptions[index].value);
+                }
+            });
+
+            const spCreateUrl = "{% url 'wayapp:spadd_item' %}";
+
+            fetch(spCreateUrl, {
+                method: 'POST',
+                headers: { 'X-CSRFToken': getCSRFToken() },
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    alert(data.error);
+                    return;
+                }
+
+                // ✅ 업로드 후 wayapp:spdetail 페이지로 이동
+                const spDetailUrl = `{% url 'wayapp:spdetail' 12345 %}`.replace("12345", data.content_id);
+                window.location.href = spDetailUrl;
+
+            })
+            .catch(error => console.error('Error:', error));
+        }
+
+
+        function toggleCustomInput(select) {
+            var customInput = document.getElementById("pil_group_custom");
+            if (select.value === "custom_group") {
+                customInput.style.display = "block";  // 기타 선택 시 입력 필드 보이기
+            } else {
+                customInput.style.display = "none";   // 기본 옵션 선택 시 숨기기
+                customInput.value = "";  // 기존 입력값 초기화
+            }
+        }
+    </script>
+
+    <style>
+        /* 미리보기 스타일 */
+        .preview-container {
+            display: flex;
+            justify-content: center; /* 가운데 정렬 */
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .preview-item {
+            text-align: center;
+        }
+
+        .preview-item img {
+            width: 80%;
+            max-width: 400px;
+            height: auto;
+            display: block;
+            margin: 0 auto; /* 가운데 정렬 */
+        }
+
+        .uploadItem { margin-bottom: 30px; }
+
+        /* 업로드 입력창 스타일 */
+        .uploadItem {
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .uploadItem input[type="file"] {
+            display: block;
+            margin: 10px auto;
+        }
+
+        .uploadItem textarea[type="text"] {
+
+            margin: 10px auto; /* 설명 입력창도 중앙 정렬 */
+            padding: 8px;
+            width: 80%;
+            height: 80px;
+            max-width: 400px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            resize: vertical;
+        }
+        .description-input {
+            width: 80%;  /* 너비를 100%로 설정 */
+            height: 80px;  /* 기본 높이 설정 */
+            padding: 8px;  /* 내부 여백 */
+            max-width: 400px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            resize: vertical;
+        }
+
+        .uploadItem input[type="text_group"] {
+            display: block;
+            margin: 10px auto; /* 설명 입력창도 중앙 정렬 */
+            padding: 8px;
+            width: 80%;
+            height: 40px;
+            max-width: 400px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+    </style>
+
+
+{% endblock %}

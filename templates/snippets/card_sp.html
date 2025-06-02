@@ -1,0 +1,26 @@
+{% load static %}
+
+<div class="profile-header" style="display: flex; align-items: flex-end; gap: 4px;">
+    {% if special_pilgrim.pilgrim.author.profile %}
+        <img src="{{ special_pilgrim.pilgrim.author.profile.image.url }}"
+             alt="{{ special_pilgrim.pilgrim.author.profile.nickname }}"
+             style="height: 20px; width: 20px; margin-right: 2px;">
+        <span style="color: black; font-size: 0.8rem;">
+            {{ special_pilgrim.pilgrim.author.profile.nickname }}
+        </span>
+    {% else %}
+        <span style="color: black; font-size: 0.8rem;">
+            {{ special_pilgrim.pilgrim.author.profile.nickname }}
+        </span>
+    {% endif %}
+
+    <p style="font-family: NanumDdoBagDdoBag; font-weight: bold; font-size: 1rem; color: black; margin: 0 0 0 15px;">
+        {{ special_pilgrim.pilgrim.group|slice:":8" }} 순례{% if special_pilgrim.pilgrim.group|length > 8 %}...{% endif %}
+    </p>
+</div>
+
+<div>
+    <img src="{{ special_pilgrim.image }}" alt="">
+</div>
+
+

@@ -5,12 +5,14 @@
 
     <div style="text-align: center; max-width: 500px; margin: 4rem auto;">
         <div>
-            <h4>계정 탈퇴</h4>
+            <br>
+            <h4>계정 탈퇴를 하시겠습니까?</h4>
+            <br>
         </div>
         <form action="{% url 'accountapp:delete' pk=target_user.pk %}" method="post">
             {% csrf_token %}
             {% bootstrap_form form %}
-            <input type="submit" class="btn btn-danger rounded-pill col-6 mt-3">
+            <input type="submit" class="btn btn-danger rounded-pill col-3 mt-3">
         </form>
     </div>
 

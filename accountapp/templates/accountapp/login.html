@@ -5,14 +5,18 @@
 
     <div>
         <div>
-            <h4>Login</h4>
+            <h4>로그인</h4>
         </div>
         <br>
         <form action="" method="post">
             {% csrf_token %}
             {% bootstrap_form form %}
-            <input type="submit" class="btn btn-dark rounded-pill col-5 mt-3">
+            <button type="submit" class="btn btn-dark rounded-pill col-5 mt-3">제출</button>
+            <input type="hidden" value="{{ request.GET.next }}">
         </form>
+        <p class="text-center mt-3" style="margin-top: 1.5rem;">
+            회원이 아니신가요? &nbsp <a href="{% url 'accountapp:create' %}" style="font-weight: bold;">회원가입</a>
+        </p>
     </div>
 
 {% endblock %}

@@ -1,7 +1,15 @@
 {% extends 'base.html' %}
 {% load bootstrap4 %}
+{% load static %}
 
 {% block content %}
+    <style>
+        .word-wrap {
+            white-space: normal;       /* 줄 바꿈을 유지하되 단어가 길어지면 줄 바꿈 */
+            word-wrap: break-word;       /* 긴 단어가 줄을 넘지 않도록 강제로 줄 바꿈 */
+            word-break: keep-all;       /* 단어가 너무 길면 중간에서 강제로 줄 바꿈 */
+        }
+    </style>
 
     <div>
 
@@ -17,14 +25,16 @@
                 {% endif %}
 
             </h2>
-            <h5 style="margin-bottom: 3rem;">
-                {{ target_user.profile.message }}
-            </h5>
+            <div class="word-wrap">
+                <p style="font-size: 1.1rem; margin-top: 1rem; margin-bottom: 2rem; margin-left: 1rem; margin-right: 1rem;">
+                    {{ target_user.profile.message|linebreaksbr }}
+                </p>
+            </div>
 
         {% else %}
             {% if target_user == user %}
-                <a href="{% url 'profileapp:create' %}">
-                    <h2 style="font-family: 'NanumSquareB'">
+                <a href="{% url 'profileapp:create' %}" style="text-decoration-line: none;">
+                    <h2 style="font-family: 'NanumSquareB'; margin-bottom: 1.5rem; color: deepskyblue;">
                         프로필 생성
                     </h2>
                 </a>
@@ -36,12 +46,19 @@
         {% endif %}
 
         {% if target_user == user %}
-            <a href="{% url 'accountapp:update' pk=user.pk %}" class = "btn btn-success rounded-pill btn-sm col-23" style="text-decoration-line: none;">
-                사용자 정보 변경
+            <a href="{% url 'accountapp:update' pk=user.pk %}" class = "btn btn-success rounded-pill btn-sm col-3" style="text-decoration-line: none;">
+                정보 변경
             </a>
             &nbsp
-            <a href="{% url 'accountapp:delete' pk=user.pk %}" class = "btn btn-danger rounded-pill btn-sm col-23" style="text-decoration-line: none;">
-                사용자 계정 삭제
+            <a href="{% url 'accountapp:delete' pk=user.pk %}" class = "btn btn-danger rounded-pill btn-sm col-3" style="text-decoration-line: none;">
+                계정 삭제
+            </a>
+            <br>
+            <br>
+            <a href="{% url 'accountapp:logout' %}" style="text-decoration-line: none;">
+                <img src="{% static 'icons8-logout-50.png' %}" alt="logout"
+                     style="width: 20px; height: 20px; cursor: pointer;">
+                <span style=" color: black;">로그아웃</span>
             </a>
         {% endif %}
     </div>
