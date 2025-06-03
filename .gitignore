@@ -85,3 +85,10 @@ db.sqlite3
 .idea/
 
 Dockerfile
+
+nginx.conf
+
+staticfiles/
+
+__pycache__/
+*.pyc

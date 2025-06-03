@@ -34,9 +34,8 @@
         {% for group in request.user.groups.all %}
             {% if group.name == "Toledot" %}
                 <div style="text-align: right; margin-top: 100px; margin-bottom: 1rem; margin-right: 1.2rem;">
-                    <a href="{% url 'wayapp:create' %}" style="text-decoration-line: none; font-size: 1.5rem; color: black;">
-                        <img src="{% static 'Toledot_post2.png' %}" alt="post"
-                            style="width: 22px; height: 22px; cursor: pointer;">
+                    <a href="{% url 'wayapp:create' %}" style="text-decoration: none; font-size: 1.2rem; color: black;">
+                        ➕
                     </a>
                 </div>
             {% endif %}
@@ -54,7 +53,7 @@
 
         {% else %}
             <div style="text-align: center;">
-                <h1>순례 기록 없음</h1>
+                <p style="font-family: NanumDdoBagDdoBag; font-size: 2rem; font-weight: bold; color: #008B8B;">순례 기록없음</p>
             </div>
         {% endif %}
     </div>

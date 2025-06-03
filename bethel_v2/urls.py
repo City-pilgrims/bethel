@@ -22,7 +22,7 @@ from django.urls import path, include
 from pilgrimsapp.views import intro_images
 
 urlpatterns = [
-    path('',intro_images, name='intro'),
+    path('', intro_images, name='intro'),
     path('admin/', admin.site.urls),
     path('pilgrims/', include('pilgrimsapp.urls')),
     path('accounts/', include('accountapp.urls')),
