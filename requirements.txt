@@ -10,6 +10,8 @@ django-environ==0.11.2
 django-lifecycle==1.2.4
 django-taggit==6.1.0
 django-widget-tweaks==1.5.0
+gunicorn==23.0.0
+packaging==25.0
 Pillow==9.5.0
 soupsieve==2.6
 sqlparse==0.5.3
