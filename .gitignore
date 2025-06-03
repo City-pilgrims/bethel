@@ -86,7 +86,7 @@ db.sqlite3
 
 Dockerfile
 
-nginx.conf
+**/nginx.conf
 
 staticfiles/
 
