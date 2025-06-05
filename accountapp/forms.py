@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, UserChangeForm
 
-CustomUser = get_user_model()  # settings.AUTH_USER_MODEL에 지정된 사용자 모델
+CustomUser = get_user_model()  # settingss.AUTH_USER_MODEL에 지정된 사용자 모델
 
 
 class AccountUpdateForm(UserChangeForm):
