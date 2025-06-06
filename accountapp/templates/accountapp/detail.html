@@ -46,16 +46,11 @@
         {% endif %}
 
         {% if target_user == user %}
-            <a href="{% url 'accountapp:update' pk=user.pk %}" class = "btn btn-success rounded-pill btn-sm col-3" style="text-decoration-line: none;">
-                정보 변경
+            <a href="{% url 'accountapp:update' pk=user.pk %}" style="text-decoration-line: none; color: black;">
+                ✏️정보 변경
             </a>
-            &nbsp
-            <a href="{% url 'accountapp:delete' pk=user.pk %}" class = "btn btn-danger rounded-pill btn-sm col-3" style="text-decoration-line: none;">
-                계정 삭제
-            </a>
-            <br>
-            <br>
-            <a href="{% url 'accountapp:logout' %}" style="text-decoration-line: none;">
+            &nbsp&nbsp
+            <a href="{% url 'accountapp:logout' %}?next={% url 'accountapp:detail' pk=user.pk %}" style="text-decoration-line: none;">
                 <img src="{% static 'icons8-logout-50.png' %}" alt="logout"
                      style="width: 20px; height: 20px; cursor: pointer;">
                 <span style=" color: black;">로그아웃</span>

@@ -19,11 +19,17 @@
             font-weight: bold;
         }
 
-        #menu {
+        .menu-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        .menu {
             display: none;
             position: absolute;
             top: 100%;
-            right: 35%;
+            left: 50%;
+            transform: translateX(-50%);
             background-color: rgba(0, 0, 0, 0.5);
             width: 150px;
             padding: 5px;
@@ -31,7 +37,7 @@
             transition: all 0.3s ease-in-out;
         }
 
-        #menu a {
+        .menu a {
             display: block;
             color: white;
             text-decoration: none;
@@ -40,11 +46,11 @@
             border-radius: 5px;
         }
 
-        #menu a:hover {
+        .menu a:hover {
             background-color: #575757;
         }
 
-        #menu.show {
+        .menu.show {
             display: block;
         }
     </style>
@@ -59,15 +65,24 @@
             <a href="{% url 'pilgrimsapp:intro' %}">
                 <span>Pilgrims</span>
             </a>&nbsp
-            <a href="{% url 'truthapp:index' %}">
-                <span>Truth</span>
-            </a>&nbsp
 
-            <button id="menu-toggle" style="color: black; border: none; background-color: transparent; font-weight: bold;"><span>Way</span></button>
-            <div id="menu" class="menu">
-                <a href="{% url 'wayapp:list' %}">매일 순례</a>
-                <a href="{% url 'wayapp:splist' %}">특별 순례</a>
-                <a href="{% url 'wayapp:pilvideolist' %}">순례 영상</a>
+            <div class="menu-container">
+                <button class="menu-toggle" data-target="menu-truth" style="color: black; border: none; background-color: transparent; font-weight: bold;">
+                    <span>Truth</span></button>
+                <div id="menu-truth" class="menu">
+                    <a href="{% url 'truthapp:index' %}">말씀(Scripture)</a>
+                    <a href="{% url 'truthapp:index' %}">묵상(Meditation)</a>
+                </div>
+            </div>
+
+            <div class="menu-container">
+                <button class="menu-toggle" data-target="menu-way" style="color: black; border: none; background-color: transparent; font-weight: bold;">
+                    <span>Way</span></button>
+                <div id="menu-way" class="menu">
+                    <a href="{% url 'wayapp:list' %}">매일 순례</a>
+                    <a href="{% url 'wayapp:splist' %}">특별 순례</a>
+                    <a href="{% url 'wayapp:pilvideolist' %}">순례 영상</a>
+                </div>
             </div>
             &nbsp
             <a href="{% url 'lifeapp:list' %}">
@@ -90,22 +105,30 @@
     </div>
 
     <script>
-        // 메뉴를 열고 닫는 기능
-        const menuToggle = document.getElementById('menu-toggle');
-        const menu = document.getElementById('menu');
+    document.addEventListener('DOMContentLoaded', function () {
+        const toggles = document.querySelectorAll('.menu-toggle');
 
-        // 메뉴 버튼 클릭 시 메뉴 열기/닫기
-        menuToggle.addEventListener('click', function(event) {
-            menu.classList.toggle('show');
-            // 메뉴 버튼 클릭 시 이벤트 전파를 막음
-            event.stopPropagation();
-        });
+        toggles.forEach(function(toggleBtn) {
+            const menuId = toggleBtn.getAttribute('data-target');
+            const menu = document.getElementById(menuId);
 
-        // 다른 영역 클릭 시 메뉴 닫기
-        document.addEventListener('click', function(event) {
-            // 클릭한 대상이 메뉴나 메뉴 버튼이 아니면 메뉴를 닫기
-            if (!menu.contains(event.target) && event.target !== menuToggle) {
-                menu.classList.remove('show');
-            }
+            // 버튼 클릭 시 해당 메뉴 열고 닫기
+            toggleBtn.addEventListener('click', function(event) {
+                event.stopPropagation(); // 클릭 버블 방지
+
+                // 모든 메뉴 닫기 (다중 메뉴 대비)
+                document.querySelectorAll('.menu').forEach(m => m.classList.remove('show'));
+
+                // 해당 메뉴 toggle
+                menu.classList.toggle('show');
+            });
+
+            // 바깥 클릭 시 메뉴 닫기
+            document.addEventListener('click', function(event) {
+                if (!menu.contains(event.target) && event.target !== toggleBtn) {
+                    menu.classList.remove('show');
+                }
+            });
         });
+    });
     </script>

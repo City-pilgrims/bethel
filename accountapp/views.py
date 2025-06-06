@@ -1,6 +1,7 @@
 from django.contrib.auth import login, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 
 # Create your views here.
@@ -28,36 +29,40 @@ class AccountCreateView(CreateView):
         return redirect(self.success_url)
 
 
-class AccountDetailView(DetailView):
+class AccountDetailView(LoginRequiredMixin, DetailView):
     model = User
     context_object_name = 'target_user'
     template_name = 'accountapp/detail.html'
+    login_url = '/accounts/login/'
+
+    # 로그인 후 다시 이 페이지로 오도록 설정
+    redirect_field_name = 'next'
 
 
-@method_decorator(has_ownership, 'get')
-@method_decorator(has_ownership, 'post')
+@method_decorator(has_ownership, 'dispatch')
 class AccountUpdateView(UpdateView):
     model = CustomUser
     context_object_name = 'target_user'
     form_class = AccountUpdateForm
-    success_url = reverse_lazy('truthapp:index')
     template_name = 'accountapp/update.html'
+
+    def get_success_url(self):
+        return reverse_lazy('accountapp:detail', kwargs={'pk': self.object.pk})
 
     def form_valid(self, form):
         user = form.save(commit=False)
 
-        # 비밀번호 변경 처리
-        password = form.cleaned_data.get("password")
-        if password:  # 새 비밀번호가 입력된 경우
-            user.set_password(password)
+        # 새 비밀번호 처리 (필드명 변경됨)
+        new_password = form.cleaned_data.get("new_password")
+        if new_password:  # 새 비밀번호가 입력된 경우
+            user.set_password(new_password)
             update_session_auth_hash(self.request, user)  # 로그아웃 방지
 
         user.save()
         return super().form_valid(form)
 
 
-@method_decorator(has_ownership, 'get')
-@method_decorator(has_ownership, 'post')
+@method_decorator(has_ownership, 'dispatch')
 class AccountDeleteView(DeleteView):
     model = User
     context_object_name = 'target_user'
@@ -70,20 +75,18 @@ class CustomLoginView(LoginView):
     template_name = 'accountapp/login.html'
 
     def get_redirect_url(self):
-        # 'next' 파라미터를 GET 데이터에서 가져옵니다
-        next_url = self.request.GET.get('next','/')
-        redirect_to = self.request.GET.get('next')
+        next_url = self.request.GET.get('next', '/')
 
-        # 만약 'next'가 회원가입 페이지를 가리킨다면, 다른 페이지로 리디렉션
-        if '/accounts/create/' in next_url:
-            # 기본 페이지로 리디렉션 (예: 홈 페이지)
-            return reverse('pilgrimsapp:intro')  # 적절한 URL로 변경하세요
+        # 차단할 URL 목록
+        blocked_urls = ['/accounts/create/', '/accounts/login/']
 
-        elif '/accounts/login/' in next_url:
-            # 기본 페이지로 리디렉션 (예: 홈 페이지)
+        # 차단된 URL인 경우 intro로 리디렉션
+        if any(blocked_url in next_url for blocked_url in blocked_urls):
             return reverse('pilgrimsapp:intro')
 
-        elif not redirect_to:  # 예제: 존재하지 않는 페이지일 경우
+        # 루트 URL(/)인 경우에만 intro로 리디렉션
+        if next_url == '/':
             return reverse('pilgrimsapp:intro')
 
+        # 나머지 모든 경우는 원래 URL로 리디렉션 (MyPage 포함)
         return next_url

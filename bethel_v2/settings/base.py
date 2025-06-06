@@ -13,7 +13,6 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-from django.urls import reverse_lazy
 import os, environ
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
@@ -133,7 +132,9 @@ STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
 
-LOGOUT_REDIRECT_URL = reverse_lazy('accountapp:login')
+# 로그인 관련 url 추가
+LOGIN_URL = '/accounts/login/'
+LOGOUT_REDIRECT_URL = '/accounts/login/'
 
 #
 MEDIA_URL = '/media/'
