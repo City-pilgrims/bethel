@@ -2,16 +2,95 @@
 {% load bootstrap4 %}
 
 {% block content %}
+<style>
+     .meditation-row {
+        display: flex;
+        gap: 5px;
+        align-items: flex-start;
+        justify-content: space-between;
+        margin-bottom: 20px;
+    }
+
+    .meditation-item {
+        flex: 1;
+        text-align: center;
+        min-width: 0;
+        overflow: hidden;
+    }
+
+    .meditation-item label {
+        display: block;
+        margin-bottom: 3px;
+        font-weight: bold;
+        font-size: 10px;
+    }
+
+    input[type="file"] {
+        font-size: 0.8rem !important;
+        width: 100% !important;
+    }
+
+    /* 파일명 표시 영역 */
+    .file-name-display {
+        font-size: 8px;
+        color: #666;
+        margin-top: 2px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+</style>
 
     <div style="text-align: center; max-width: 500px; margin: 4rem auto;">
         <div class=""mb-4>
-                <h4>사용자 프로필 생성</h4>
+                <h4>사용자 프로필 수정</h4>
         </div>
         <br>
         <form action="{% url 'profileapp:update' pk=target_profile.pk %}" method="post" enctype="multipart/form-data">
             {% csrf_token %}
-            {% bootstrap_form form %}
-            <input type="submit" class="btn btn-dark rounded-pill col-4 mt-3">
+
+            <!-- 기본 필드들 -->
+            <div class="form-group">
+                <label for="{{ form.image.id_for_label }}">{{ form.image.label }}</label>
+                {{ form.image }}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.nickname.id_for_label }}">{{ form.nickname.label }}</label>
+                {{ form.nickname }}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.message.id_for_label }}">{{ form.message.label }}</label>
+                {{ form.message }}
+            </div>
+
+            <!-- 묵상 파일들을 한 줄로 -->
+            <div class="meditation-row">
+                <div class="meditation-item">
+                    <label for="{{ form.image_medfirst.id_for_label }}">{{ form.image_medfirst.label }}</label>
+                    {{ form.image_medfirst }}
+                </div>
+
+                <div class="meditation-item">
+                    <label for="{{ form.image_medsecond.id_for_label }}">{{ form.image_medsecond.label }}</label>
+                    {{ form.image_medsecond }}
+                </div>
+
+                <div class="meditation-item">
+                    <label for="{{ form.video_medthird.id_for_label }}">{{ form.video_medthird.label }}</label>
+                    {{ form.video_medthird }}
+                </div>
+            </div>
+
+            <div class="text-center mt-4">
+                <button type="submit" class="btn btn-primary rounded-pill btn-sm col-4 mt-3">
+                    제출
+                </button>
+                <a href="{% url 'accountapp:detail' pk=user.pk %}" class="btn btn-outline-secondary rounded-pill btn-sm col-4 mt-3">
+                    ✖️ 취소
+                </a>
+            </div>
         </form>
     </div>
 

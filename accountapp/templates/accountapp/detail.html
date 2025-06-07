@@ -9,6 +9,83 @@
             word-wrap: break-word;       /* 긴 단어가 줄을 넘지 않도록 강제로 줄 바꿈 */
             word-break: keep-all;       /* 단어가 너무 길면 중간에서 강제로 줄 바꿈 */
         }
+
+        .meditation-display {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            align-items: flex-start;
+            margin: 2rem 0;
+            margin-top: 2.5rem;
+            flex-wrap: wrap;
+            max-width: 550px;
+            margin-left: auto;
+            margin-right: auto;
+            padding: 0.8rem;
+            border-radius: 12px;
+            background-color: darkgray;
+        }
+
+        .meditation-item {
+            flex: 0 0 calc(50% - 5px);
+            max-width: calc(50% - 5px);
+            text-align: center;
+        }
+
+        .meditation-item img {
+            max-width: 100%; /* 컨테이너를 넘지 않도록 */
+            height: auto; /* 원본 비율 유지 */
+            border-radius: 10px;
+            margin-bottom: 5px;
+            border: 2px solid #ddd;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .meditation-item video {
+            max-width: 100%; /* 컨테이너를 넘지 않도록 */
+            height: auto; /* 원본 비율 유지 */
+            border-radius: 10px;
+            border: 2px solid #ddd;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .meditation-item span {
+            font-size: 0.9rem;
+            color: #666;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .meditation-display {
+                max-width: 400px;
+                gap: 8px;
+            }
+
+            .meditation-item {
+                flex: 0 0 calc(50% - 4px);
+                max-width: calc(50% - 4px);
+            }
+
+            .meditation-item span {
+                font-size: 0.8rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .meditation-display {
+                max-width: 350px;
+                gap: 6px;
+            }
+
+            .meditation-item {
+                flex: 0 0 calc(50% - 3px);
+                max-width: calc(50% - 3px);
+            }
+        }
     </style>
 
     <div>
@@ -31,6 +108,8 @@
                 </p>
             </div>
 
+
+
         {% else %}
             {% if target_user == user %}
                 <a href="{% url 'profileapp:create' %}" style="text-decoration-line: none;">
@@ -45,7 +124,7 @@
             {% endif %}
         {% endif %}
 
-        {% if target_user == user %}
+        {% if target_user == user and user.is_authenticated and user.pk %}
             <a href="{% url 'accountapp:update' pk=user.pk %}" style="text-decoration-line: none; color: black;">
                 ✏️정보 변경
             </a>
@@ -55,6 +134,33 @@
                      style="width: 20px; height: 20px; cursor: pointer;">
                 <span style=" color: black;">로그아웃</span>
             </a>
+        {% endif %}
+
+
+        <!-- 묵상 파일들 표시 -->
+        {% if target_user.profile.image_medfirst or target_user.profile.image_medsecond or target_user.profile.video_medthird %}
+            <div class="meditation-display">
+                {% if target_user.profile.image_medfirst %}
+                    <div class="meditation-item">
+                        <img src="{{ target_user.profile.image_medfirst.url }}" alt="묵상 이미지 1">
+                    </div>
+                {% endif %}
+
+                {% if target_user.profile.image_medsecond %}
+                    <div class="meditation-item">
+                        <img src="{{ target_user.profile.image_medsecond.url }}" alt="묵상 이미지 2">
+                    </div>
+                {% endif %}
+
+                {% if target_user.profile.video_medthird %}
+                    <div class="meditation-item">
+                        <video controls>
+                            <source src="{{ target_user.profile.video_medthird.url }}" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                {% endif %}
+            </div>
         {% endif %}
     </div>
 

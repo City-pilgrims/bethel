@@ -38,6 +38,12 @@ class AccountDetailView(LoginRequiredMixin, DetailView):
     # 로그인 후 다시 이 페이지로 오도록 설정
     redirect_field_name = 'next'
 
+    def dispatch(self, request, *args, **kwargs):
+        # 다른 사용자의 프로필을 보려고 하면 자신의 프로필로 리디렉션
+        if 'pk' in kwargs and int(kwargs['pk']) != request.user.pk:
+            return redirect('accountapp:detail', pk=request.user.pk)
+        return super().dispatch(request, *args, **kwargs)
+
 
 @method_decorator(has_ownership, 'dispatch')
 class AccountUpdateView(UpdateView):
@@ -47,7 +53,11 @@ class AccountUpdateView(UpdateView):
     template_name = 'accountapp/update.html'
 
     def get_success_url(self):
-        return reverse_lazy('accountapp:detail', kwargs={'pk': self.object.pk})
+        # None 체크 추가
+        if self.object and self.object.pk:
+            return reverse('accountapp:detail', kwargs={'pk': self.object.pk})
+        else:
+            return reverse('accountapp:detail', kwargs={'pk': self.request.user.pk})
 
     def form_valid(self, form):
         user = form.save(commit=False)

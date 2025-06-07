@@ -1,5 +1,52 @@
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render
+from django.core.exceptions import PermissionDenied
+from django.shortcuts import render, get_object_or_404, redirect
+from django.urls import reverse, reverse_lazy
+from django.utils.decorators import method_decorator
+from django.views.generic import ListView, CreateView, DeleteView
+
+from truthapp.decorators import reciting_ownership_required
+from truthapp.forms import RecitingBoardForm
+from truthapp.models import RecitingBoard
+
+
+@method_decorator(login_required, 'get')
+@method_decorator(login_required, 'post')
+class RecitingCreateView(CreateView):
+    model = RecitingBoard
+    form_class = RecitingBoardForm
+    template_name = 'truthapp/create.html'
+    success_url = reverse_lazy('truthapp:list')
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['user'] = self.request.user
+        return kwargs
+
+    def form_valid(self, form):
+        temp_reciting = form.save(commit=False)
+        temp_reciting.author = self.request.user
+        temp_reciting.save()
+        return super().form_valid(form)
+
+
+class RecitingListView(ListView):
+    model = RecitingBoard
+    context_object_name = 'reciting_list'
+    template_name = 'truthapp/list.html'
+    paginate_by = 25
+
+    def get_queryset(self):
+        return RecitingBoard.objects.all().order_by('-created_at')
+
+
+@login_required
+def RecitingDeleteView(request, pk):
+
+    pilboard = get_object_or_404(RecitingBoard, pk=pk)
+    pilboard.delete()
+
+    return redirect('truthapp:list')
 
 
 def index(request):

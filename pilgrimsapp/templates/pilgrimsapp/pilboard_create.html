@@ -20,17 +20,24 @@
 
         <div class="d-flex flex-column align-items-center">
             {% bootstrap_form form %}
+        </div>
 
-            <!-- 이미지 미리보기 -->
-            <div class="preview-container mt-3">
-                <img id="image-preview" alt="이미지 미리보기" style="max-width: 400px; height: auto; display: none; border-radius: 8px;">
-            </div>
+        <!-- 이미지 미리보기 -->
+        <div class="preview-container mt-3">
+            <img id="image-preview" alt="이미지 미리보기" style="max-width: 400px; height: auto; display: none; border-radius: 8px;">
+        </div>
 
-            <button type="submit" class="btn btn-dark rounded-pill btn-sm col-4 mt-3">업로드</button>
+        <!-- 제출 버튼 -->
+        <div class="text-center mt-4">
+            <button type="submit" class="btn btn-primary rounded-pill btn-sm col-4 mt-3">
+                제출
+            </button>
+            <a href="{% url 'pilgrimsapp:pilboardlist' %}" class="btn btn-outline-secondary rounded-pill btn-sm col-4 mt-3">
+                ✖️ 취소
+            </a>
         </div>
     </form>
-    <br>
-    <a href="{% url 'pilgrimsapp:pilboardlist' %}">목록 보기</a>
+
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {

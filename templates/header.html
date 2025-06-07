@@ -13,10 +13,15 @@
             z-index: 1000;
         }
 
+        .bethel_logo {
+            font-family: 'Pacifico', serif;
+            color: #800020 !important;
+        }
+
         .bethel_header a {
-            color: black;
-            text-decoration-line: none;
+            text-decoration: none;
             font-weight: bold;
+            color: inherit; /* 부모 요소의 색상 상속 */
         }
 
         .menu-container {
@@ -34,6 +39,7 @@
             width: 150px;
             padding: 5px;
             border-radius: 5px;
+            z-index: 1100;
             transition: all 0.3s ease-in-out;
         }
 
@@ -58,22 +64,15 @@
 
 
     <div class="bethel_header" style="height: 100px;">
-        <div style="margin-bottom: 20px; color: #800020;">
-            <h1 class="bethel_logo">Bethel of Seoul</h1>
+        <div style="margin-bottom: 20px;">
+            <a href="{% url 'pilgrimsapp:intro' %}">
+                <h1 class="bethel_logo">City Pilgrims</h1>
+            </a>
         </div>
         <div>
             <a href="{% url 'pilgrimsapp:intro' %}">
-                <span>Pilgrims</span>
+                <span>Jesus</span>
             </a>&nbsp
-
-            <div class="menu-container">
-                <button class="menu-toggle" data-target="menu-truth" style="color: black; border: none; background-color: transparent; font-weight: bold;">
-                    <span>Truth</span></button>
-                <div id="menu-truth" class="menu">
-                    <a href="{% url 'truthapp:index' %}">말씀(Scripture)</a>
-                    <a href="{% url 'truthapp:index' %}">묵상(Meditation)</a>
-                </div>
-            </div>
 
             <div class="menu-container">
                 <button class="menu-toggle" data-target="menu-way" style="color: black; border: none; background-color: transparent; font-weight: bold;">
@@ -84,13 +83,30 @@
                     <a href="{% url 'wayapp:pilvideolist' %}">순례 영상</a>
                 </div>
             </div>
+
+            <div class="menu-container">
+                <button class="menu-toggle" data-target="menu-truth" style="color: black; border: none; background-color: transparent; font-weight: bold;">
+                    <span>Truth</span></button>
+                <div id="menu-truth" class="menu">
+                    <a href="{% url 'truthapp:index' %}">말씀(Scripture)</a>
+                    <a href="{% url 'truthapp:list' %}">묵상(Meditation)</a>
+                </div>
+            </div>
+
+
             &nbsp
             <a href="{% url 'lifeapp:list' %}">
                 <span>Life</span>
             </a>&nbsp
-            <a href="{% url 'pilgrimsapp:pilboardlist' %}">
-                <span>Q&A</span>
-            </a>&nbsp
+            <div class="menu-container">
+                <button class="menu-toggle" data-target="menu-church" style="color: black; border: none; background-color: transparent; font-weight: bold;">
+                    <span>Church</span></button>
+                <div id="menu-church" class="menu">
+                    <a href="{% url 'pilgrimsapp:pilboardlist' %}">소식</a>
+                    <a href="{% url 'pilgrimsapp:pilboardlist' %}">Q&A</a>
+                </div>
+            </div>
+            &nbsp
 
             {% if not user.is_authenticated %}
                 <a href="{% url 'accountapp:login' %}?next={{ request.path }}">

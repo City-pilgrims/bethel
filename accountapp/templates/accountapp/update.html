@@ -51,7 +51,14 @@
                 {{ form.password_confirm }}
             </div>
 
-            <button type="submit" class="btn btn-dark rounded-pill col-4 mt-3">수정 제출</button>
+            <div class="text-center mt-4">
+                <button type="submit" class="btn btn-primary rounded-pill btn-sm col-4 mt-3">
+                    제출
+                </button>
+                <a href="{% url 'accountapp:detail' pk=user.pk %}" class="btn btn-outline-secondary rounded-pill btn-sm col-4 mt-3">
+                    ✖️ 취소
+                </a>
+            </div>
         </form>
         <br>
         <a href="{% url 'accountapp:delete' pk=user.pk %}" class = "btn btn-danger rounded-pill btn-sm col-3" style="text-decoration-line: none;">
