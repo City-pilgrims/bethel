@@ -39,6 +39,10 @@ class AccountDetailView(LoginRequiredMixin, DetailView):
     redirect_field_name = 'next'
 
     def dispatch(self, request, *args, **kwargs):
+        # 로그인 상태 확인
+        if not request.user.is_authenticated:
+            return super().dispatch(request, *args, **kwargs)
+
         # 다른 사용자의 프로필을 보려고 하면 자신의 프로필로 리디렉션
         if 'pk' in kwargs and int(kwargs['pk']) != request.user.pk:
             return redirect('accountapp:detail', pk=request.user.pk)

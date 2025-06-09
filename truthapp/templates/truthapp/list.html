@@ -21,7 +21,7 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 1rem 0;
+        padding: 0.5rem 0.5rem;
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         color: white;
         z-index: 100;
@@ -175,14 +175,14 @@
         border-color: #007bff;
     }
 
-    @media (max-width: 500px) {
+    @media (max-width: 700px) {
         .reciting-list-container {
-            padding-top: 50px;
+            padding-top: 30px;
         }
 
         .page-header {
             top: 100px;
-            padding: 1rem 1rem;
+            padding: 0.5rem 0.5rem;
         }
 
         .header-title {
@@ -222,7 +222,7 @@
         }
     }
 
-    @media (max-width: 500px) {
+    @media (max-width: 700px) {
         .content-row {
             gap: 6px;
         }
@@ -246,7 +246,7 @@
         <div class="header-button-area">
             {% if user.is_authenticated %}
                 <a href="{% url 'truthapp:create' %}" class="btn-header-create">
-                    🎤 업로드
+                    🎤 녹음
                 </a>
             {% endif %}
         </div>
