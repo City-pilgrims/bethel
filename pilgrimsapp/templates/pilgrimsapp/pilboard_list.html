@@ -4,48 +4,114 @@
 {% load custom_filters %}
 
 {% block content %}
+    <!-- 고정된 페이지 헤더 -->
+    <div class="page-header">
+        <p class="header-title">&#10017; 일어나라 빛을 발하라!</p>
+        <div class="header-button-area">
+            {% if user.is_authenticated %}
+                {% for group in request.user.groups.all %}
+                    {% if group.name == "Toledot" %}
+                        <a href="{% url 'pilgrimsapp:pilboardcreate' %}" class="btn-header-create">
+                            ✏️&nbsp작성
+                        </a>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+    <!-- 여백 추가 (오타 수정) -->
+    <div style="padding-top: 30px;">
+        {% for pilboard in pilboards %}
+            <div class="container">
+                <div class="profile-header">
+                    {% if pilboard.author.profile %}
+                        <img src="{{ pilboard.author.profile.image.url }}"
+                             alt="{{ pilboard.author.profile.nickname }}" style="height: 20px; width: 20px;">
+                        <span style="color: black; font-size: 0.7rem;">{{ pilboard.author.profile.nickname }}</span>
+                        &nbsp∙&nbsp
+                        <p class="text-sm text-gray-600 dark:text-gray-400" style="font-size:0.7rem; color:gray; margin: 0; margin-right: 1.5rem;">
+                            {{ pilboard.created_at|format_date }}
+                        </p>
+                    {% else %}
+                        <h6 style="color: black;">{{ pilboard.author.profile.nickname }}</h6>
+                    {% endif %}
+                </div>
+            </div>
+            <div>
+                <a href="{% url 'pilgrimsapp:pilboarddetail' pk=pilboard.pk %}" style="text-decoration-line: none; color: black;">
+                    <div class="board-container">
+                        <div class="board-content">
+                            <p>{{ pilboard.content|slice:":56" }} {% if pilboard.content|length > 56 %}...{% endif %}</p>
+                        </div>
 
-    <div style="text-align: right; margin-top: 100px; margin-bottom: 1rem; margin-right: 1.2rem;">
-        <a href="{% url 'pilgrimsapp:pilboardcreate' %}" style="text-decoration: none; font-size: 1.2rem; color: black;">
-            ➕
-        </a>
+                        <div class="board-image">
+                            {% if pilboard.image %}
+                                <img src="{{ pilboard.image.url }}" alt="Image" >
+                            {% endif %}
+                        </div>
+                    </div>
+                </a>
+            </div>
+        {% endfor %}
     </div>
 
-    {% for pilboard in pilboards %}
-        <div class="container">
-            <div class="profile-header">
-                {% if pilboard.author.profile %}
-                    <img src="{{ pilboard.author.profile.image.url }}"
-                         alt="{{ pilboard.author.profile.nickname }}" style="height: 20px; width: 20px;">
-                    <span style="color: black; font-size: 0.7rem;">{{ pilboard.author.profile.nickname }}</span>
-                    &nbsp∙&nbsp
-                    <p class="text-sm text-gray-600 dark:text-gray-400" style="font-size:0.7rem; color:gray; margin: 0; margin-right: 1.5rem;">
-                        {{ pilboard.created_at|format_date }}
-                    </p>
-                {% else %}
-                    <h7 style="color: black;">{{ pilboard.author.profile.nickname }}</h7>
-                {% endif %}
-            </div>
-        </div>
-        <div>
-            <a href="{% url 'pilgrimsapp:pilboarddetail' pk=pilboard.pk %}" style="text-decoration-line: none; color: black;">
-                <div class="board-container">
-                    <div class="board-content">
-                        <p>{{ pilboard.content|slice:":56" }} {% if pilboard.content|length > 56 %}...{% endif %}
-                    </div>
-
-                    <div class="board-image">
-                        {% if pilboard.image %}
-                            <img src="{{ pilboard.image.url }}" alt="Image" >
-                        {% endif %}
-                    </div>
-                </div>
-            </a>
-        </div>
-    {% endfor %}
-
-
     <style>
+        .page-header {
+            position: fixed;
+            top: 110px;
+            left: 50%;
+            transform: translateX(-50%);
+            max-width: 500px;
+            width: calc(100% - 40px);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 0.5rem;
+            background: linear-gradient(135deg, #800020 0%, #B22222 100%);
+            color: white;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin: 0;
+            border-radius: 10px;
+        }
+
+        .header-title {
+            flex: 0 0 75%;
+            margin: 0;
+            font-size: 1rem;
+            font-weight: bold;
+            padding-right: 0.8rem;
+        }
+
+        .header-button-area {
+            flex: 0 0 25%;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+        }
+
+        .btn-header-create {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            padding: 8px 20px;
+            border-radius: 25px;
+            font-weight: bold;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            white-space: nowrap;
+            font-size: 0.9rem;
+        }
+
+        .btn-header-create:hover {
+            background: rgba(255, 255, 255, 0.3);
+            color: white;
+            text-decoration: none;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
+        }
+
         .board-container {
             display: flex;
             justify-content: space-between;
@@ -71,6 +137,33 @@
             display: flex; /* 자식 요소들을 수평으로 배치 */
             justify-content: flex-start; /* 자식 요소들 사이의 공간을 고르게 분배 */
             margin-top: 1rem;
+        }
+
+        /* 모바일 최적화 */
+        @media (max-width: 700px) {
+            .page-header {
+                top: 100px;
+                padding: 0.5rem 0.5rem;
+                border-radius: 10px;
+            }
+
+            .header-title {
+                font-size: 1.1rem;
+                flex: 0 0 75%;
+            }
+
+            .header-button-area {
+                flex: 0 0 25%;
+            }
+
+            .btn-header-create {
+                font-size: 0.75rem;
+                padding: 6px 12px;
+            }
+
+            .content-row {
+                gap: 8px;
+            }
         }
 
     </style>

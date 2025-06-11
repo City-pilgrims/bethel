@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+
 {% load static %}
 
 {% block content %}
@@ -14,17 +15,18 @@
         justify-content: space-between;
         align-items: center;
         padding: 0.5rem 0.5rem;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(135deg, #800020 0%, #B22222 100%);
         color: white;
         z-index: 100;
         box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         margin: 0;
+        border-radius: 10px;
     }
 
     .header-title {
         flex: 0 0 75%;
         margin: 0;
-        font-size: 1.1rem;
+        font-size: 1rem;
         font-weight: bold;
         padding-right: 0.8rem;
     }
@@ -87,6 +89,16 @@
         .page-header {
             top: 100px;
             padding: 0.5rem 0.5rem;
+            border-radius: 10px;
+        }
+
+        .header-title {
+            font-size: 1.1rem;
+            flex: 0 0 75%;
+        }
+
+        .header-button-area {
+            flex: 0 0 25%;
         }
 
         .btn-header-create {
@@ -136,7 +148,7 @@
                 <div class="col-5 col-md-5">
                     <label for="search" class="form-label">키워드</label>
                     <input type="text" name="search" id="search" class="form-control"
-                           placeholder="제목이나 내용을 검색하세요" value="{% if search_query and search_query != 'None' %}{{ search_query }}{% endif %}">
+                           placeholder="키워드를 넣으세요" value="{% if search_query and search_query != 'None' %}{{ search_query }}{% endif %}">
                 </div>
                 <div class="col-3 col-md-2 d-flex align-items-end justify-content-center">
                     <button type="submit" class="btn btn-outline-primary w-40">검색</button>
@@ -156,8 +168,8 @@
                             <th>제목</th>
                             <th width="13%">⛪</th>
                             <th width="14%">📅</th>
-                            <th width="8%">👁️‍</th>
-                            <th width="8%">답변</th>
+                            <th width="8%">👀</th>
+                            <th width="8%">✔️</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -168,7 +180,7 @@
                                 <span class="badge bg-secondary">{{ question.get_category_display }}</span>
                             </td>
                             <td>
-                                <a href="{% url 'pilgrimsapp:detail' question.pk %}" class="text-decoration-none">
+                                <a href="{% url 'pilgrimsapp:detail' question.pk %}" class="text-decoration-none" style="color: #800020;">
                                     {% if question.is_secret %}
                                         <i class="fas fa-lock text-warning me-1"></i>
                                     {% endif %}

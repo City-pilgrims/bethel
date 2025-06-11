@@ -91,9 +91,33 @@ class NoteCreateForm(forms.ModelForm):
     class Meta:
         model = Note
         fields = ["title", "content", "tags"]
+        widgets = {
+            'title': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': '순례 제목을 입력하세요',
+                'style': 'font-family: NanumSquareL; font-size: 1rem; color: #2c3e50;'
+            }),
+            'content': forms.Textarea(attrs={
+                'class': 'form-control',
+                'placeholder': '순례 내용을 작성해주세요',
+                'rows': 7,
+                'style': 'font-family: NanumSquareL; font-size: 1rem; color: #34495e;'
+            }),
+            'tags': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': '태그를 입력하세요 (예: 서초, 강남, 여의도, 테헤란로 등)',
+                'style': 'font-family: NanumSquareL; font-size: 1rem; color: #7f8c8d;'
+            }),
+        }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
+        self.fields['title'].label = "🚶‍ 매일 순례"
+        self.fields['content'].label = "순례 내용"
+        self.fields['photos'].label = "순례 사진들"
+        self.fields['tags'].label = "순례 태그"
+
         self.helper = FormHelper()
         self.helper.attrs = {"novalidate": True}
         self.helper.form_class = "helper_form"
@@ -150,8 +174,8 @@ class VideoForm(forms.ModelForm):
         model = PilgrimVideo
         fields = ['title', 'video']
         labels = {
-            'title': '동영상 제목',  # 제목 변경
-            'video': '동영상 파일'
+            'title': '🎬 순례영상 제목',  # 제목 변경
+            'video': '📹 순례영상 파일'
         }
         widgets = {
             'title': forms.TextInput(attrs={

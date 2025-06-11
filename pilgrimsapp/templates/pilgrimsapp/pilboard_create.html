@@ -27,14 +27,16 @@
             <img id="image-preview" alt="이미지 미리보기" style="max-width: 400px; height: auto; display: none; border-radius: 8px;">
         </div>
 
-        <!-- 제출 버튼 -->
-        <div class="text-center mt-4">
-            <button type="submit" class="btn btn-primary rounded-pill btn-sm col-4 mt-3">
-                제출
-            </button>
-            <a href="{% url 'pilgrimsapp:pilboardlist' %}" class="btn btn-outline-secondary rounded-pill btn-sm col-4 mt-3">
-                ✖️ 취소
-            </a>
+        <div class="container mt-4">
+            <!-- 버튼 -->
+            <div class="d-flex justify-content-between" style="margin: 0 1rem;">
+                <a href="{% url 'pilgrimsapp:pilboardlist' %}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left me-1"></i>등록 취소
+                </a>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save me-1"></i>내용 등록
+                </button>
+            </div>
         </div>
     </form>
 

@@ -6,7 +6,7 @@
 {% block content %}
 
     <div style="text-align: center; margin-bottom: 1.2rem;">
-        <p style="font-family: NanumDdoBagDdoBag; font-weight: bold; font-size:1.8rem;">특별 순례 기록 업데이트트</p
+        <p style="font-family: NanumDdoBagDdoBag; font-weight: bold; font-size:1.8rem;">특별 순례 기록 업데이트</p
     </div>
 
     <form id="updateForm" enctype="multipart/form-data">
@@ -30,7 +30,7 @@
                    style="{% if special_pilgrim.group not in 'sydney ryukyu nakdong seoul dmz israel pacific' %}display: block{% else %}display: none{% endif %}"
                    value="{{ special_pilgrim.group }}">
         </div>
-        <h4>기존 이미지 및 설명</h4>
+        <P style="font-family: NanumDdoBagDdoBag; font-weight: bold; font-size: 1.5rem;">기존 이미지 및 설명</P>
         <div id="existingItems">
             {% for image, description in image_description_pairs %}
                 <div class="uploadItem">
@@ -41,7 +41,7 @@
             {% endfor %}
         </div>
 
-        <h4>새로운 이미지 추가</h4>
+        <P style="font-family: NanumDdoBagDdoBag; font-weight: bold; font-size: 1.5rem;">새로운 이미지 및 설명 추가</P>
         <div id="uploadContainer">
             <div class="uploadItem">
                 <input type="file" name="new_images" accept="image/*" onchange="previewImage(event, this)">
@@ -50,12 +50,24 @@
             </div>
         </div>
 
-        <button type="button" onclick="addUploadField()" class = "btn btn-success rounded-pill btn-sm col-4 mt-3">
+
+        <button type="button" onclick="addUploadField()" class = "btn btn-light">
             사진/설명 추가
         </button>
-        <button type="button" onclick="updateItems()" class="btn btn-dark rounded-pill btn-sm col-4 mt-3">
-            업데이트
-        </button>
+        <br>
+        <br>
+        <!-- 제출 버튼 -->
+        <div class="container mt-4">
+            <!-- 버튼 -->
+            <div class="d-flex justify-content-between" style="margin: 0 1rem;">
+                <a href="{% url 'wayapp:splist' %}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left me-1"></i>등록 취소
+                </a>
+                <button type="button" onclick="updateItems()" class="btn btn-primary">
+                    <i class="fas fa-save me-1"></i>업데이트
+                </button>
+            </div>
+        </div>
     </form>
 
 

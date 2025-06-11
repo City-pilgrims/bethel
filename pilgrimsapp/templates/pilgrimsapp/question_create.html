@@ -5,7 +5,7 @@
 <div class="container mt-4">
     <div class="row justify-content-center">
         <div class="col-md-8">
-            <div class="card">
+            <div class="card" style="border: none;">
                 <div class="card-header">
                     <h4 class="mb-0">
                         <i class="fas fa-question-circle me-2"></i>질문하기
@@ -57,7 +57,6 @@
                         <!-- 비밀글 설정 -->
                         <div class="card bg-light mb-3">
                             <div class="card-body">
-                                <h6 class="card-title">비밀글 설정</h6>
                                 <div class="form-check mb-3">
                                     {{ form.is_secret }}
                                     <label for="{{ form.is_secret.id_for_label }}" class="form-check-label">
@@ -68,9 +67,9 @@
                                 <div class="mb-3" id="password-field" style="display: none;">
                                     <label for="{{ form.password.id_for_label }}" class="form-label">{{ form.password.label }}</label>
                                     {{ form.password }}
-                                    {% if form.password.help_text %}
+                                    <!--{% if form.password.help_text %}
                                         <div class="form-text">{{ form.password.help_text }}</div>
-                                    {% endif %}
+                                    {% endif %}-->
                                     {% if form.password.errors %}
                                         <div class="text-danger small">
                                             {% for error in form.password.errors %}
@@ -94,7 +93,7 @@
                         <!-- 버튼 -->
                         <div class="d-flex justify-content-between">
                             <a href="{% url 'pilgrimsapp:list' %}" class="btn btn-secondary">
-                                <i class="fas fa-arrow-left me-1"></i>취소
+                                <i class="fas fa-arrow-left me-1"></i>등록 취소
                             </a>
                             <button type="submit" class="btn btn-primary">
                                 <i class="fas fa-save me-1"></i>질문 등록
@@ -130,5 +129,5 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 
 <!-- Font Awesome for icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">-->
 {% endblock %}

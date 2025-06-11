@@ -5,7 +5,7 @@
 {% block content %}
 
     <div style="text-align: center; margin-bottom: 1.2rem;">
-        <p style="font-family: NanumDdoBagDdoBag; font-weight: bold; font-size:1.8rem;">특별 순례 기록</p>
+        <p style="font-family: NanumDdoBagDdoBag; font-weight: bold; font-size:1.8rem;">🌏 특별 순례 기록</p>
     </div>
     <form id="uploadForm">
         {% csrf_token %}
@@ -34,15 +34,24 @@
                 <div class="preview-container"></div>
             </div>
         </div>
-        <button type="button" onclick="addUploadField()" class = "btn btn-success rounded-pill btn-sm col-4 mt-3">
-            사진/설명 추가
+        <button type="button" onclick="addUploadField()" class = "btn btn-light">
+            설명과 사진 추가
         </button>
-        <button type="button" onclick="uploadItems()" class="btn btn-primary rounded-pill btn-sm col-4 mt-3">
-            업로드
-        </button>
+        <br>
+        <br>
+        <!-- 제출 버튼 -->
+        <div class="container mt-4">
+            <!-- 버튼 -->
+            <div class="d-flex justify-content-between" style="margin: 0 1rem;">
+                <a href="{% url 'wayapp:splist' %}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left me-1"></i>등록 취소
+                </a>
+                <button type="button" onclick="uploadItems()" class="btn btn-primary">
+                    <i class="fas fa-save me-1"></i>묵상 제출
+                </button>
+            </div>
+        </div>
     </form>
-    <br>
-    <a href="{% url 'wayapp:splist' %}" style="color: black;">취소</a>
 
 
     <!------------------------------------------------------------------------------------>
