@@ -35,8 +35,13 @@ CSRF_TRUSTED_ORIGINS = [
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
-CSRF_COOKIE_SECURE = True   # HTTPS 환경에서는 반드시 True
+# 쿠키 보안 설정 강화
 SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+
+SESSION_COOKIE_SAMESITE = 'Lax'
+CSRF_COOKIE_SAMESITE = 'Lax'
+
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
