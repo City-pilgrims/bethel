@@ -17,7 +17,7 @@ class ProfileCreationForm(ModelForm):
             'video_medthird': '묵상 영상'
         }
         widgets = {
-            'image': forms.ClearableFileInput(attrs={
+            'image': forms.FileInput(attrs={
                 'style': 'display: block; margin: 0 auto; width: 70%;',  # 이미지 업로드 입력창의 폭을 90%로 설정
             }),
             'nickname': forms.TextInput(attrs={
@@ -30,13 +30,13 @@ class ProfileCreationForm(ModelForm):
                 'style': 'width: 80%; height: 80px; resize: none; word-wrap: break-word; margin: 0 auto',  # 입력 창 크기 조절
                 'placeholder': '제목을 입력하세요'  # 힌트 텍스트 추가
             }),
-            'image_medfirst': forms.ClearableFileInput(attrs={
+            'image_medfirst': forms.FileInput(attrs={
                 'style': 'display: block; margin: 0 auto; width: 70%;',  # 이미지 업로드 입력창의 폭을 90%로 설정
             }),
-            'image_medsecond': forms.ClearableFileInput(attrs={
+            'image_medsecond': forms.FileInput(attrs={
                 'style': 'display: block; margin: 0 auto; width: 70%;',  # 이미지 업로드 입력창의 폭을 90%로 설정
             }),
-            'video_medthird': forms.ClearableFileInput(attrs={
+            'video_medthird': forms.FileInput(attrs={
                 'style': 'display: block; margin: 0 auto; width: 70%;',  # 이미지 업로드 입력창의 폭을 90%로 설정
             }),
         }

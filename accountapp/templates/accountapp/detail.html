@@ -93,11 +93,11 @@
         {% if target_user.profile %}
             <img src="{{ target_user.profile.image.url }}" alt=""
             style="height: 12rem; width: 12rem; border-radius: 20rem; margin-bottom: 2rem; ">
-            <h2 style="font-family: 'NanumSquareB'">
+            <h2 style="font-family: 'NanumSquareB'; color: #800020;">
                 {{ target_user.profile.nickname }}
                 {% if target_user == user %}
                     <a href="{% url 'profileapp:update' pk=target_user.profile.pk %}" style="color: green; font-size: 1rem;">
-                        프로필수정
+                        프로필 수정
                     </a>
                 {% endif %}
 
@@ -113,7 +113,7 @@
         {% else %}
             {% if target_user == user %}
                 <a href="{% url 'profileapp:create' %}" style="text-decoration-line: none;">
-                    <h2 style="font-family: 'NanumSquareB'; margin-bottom: 1.5rem; color: deepskyblue;">
+                    <h2 style="font-family: 'NanumSquareB'; margin-bottom: 1.5rem; color: #800020;">
                         프로필 생성
                     </h2>
                 </a>
