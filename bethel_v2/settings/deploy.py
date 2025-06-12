@@ -26,13 +26,17 @@ SECRET_KEY = read_secret('DJANGO_SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
+ALLOWED_HOSTS = ['citypilgrims.com', 'www.citypilgrims.com', '64.176.228.128']
+
+CSRF_TRUSTED_ORIGINS = [
+    'https://citypilgrims.com',
+    'https://www.citypilgrims.com',
+]
+
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 CSRF_COOKIE_SECURE = True   # HTTPS 환경에서는 반드시 True
 SESSION_COOKIE_SECURE = True
-
-ALLOWED_HOSTS = ['citypilgrims.com', 'www.citypilgrims.com', '64.176.228.128']
-
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
