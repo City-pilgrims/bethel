@@ -32,4 +32,4 @@ END
 fi
 
 # Gunicorn 실행
-exec gunicorn config.wsgi:application --bind 0.0.0.0:8000
+exec gunicorn bethel_v2.wsgi:application --bind 0.0.0.0:8000
