@@ -1,10 +1,10 @@
-import pymysql
 import os
 import django
-from django.conf import settings
+import pymysql
 from django.contrib.auth import get_user_model
 from django.db.utils import OperationalError, ProgrammingError
 
+# ✅ pymysql을 MySQLdb처럼 사용하게 설정
 pymysql.install_as_MySQLdb()
 
 
@@ -13,10 +13,10 @@ def create_superuser_if_needed():
         return
 
     try:
-        # DB 초기화가 아직 안 된 경우는 건너뜀
+        # Django ORM 사용 전 초기화
         django.setup()
-        User = get_user_model()
 
+        User = get_user_model()
         username = os.environ.get("DJANGO_SUPERUSER_NAME", "admin")
         email = os.environ.get("DJANGO_SUPERUSER_EMAIL", "admin@example.com")
         password = os.environ.get("DJANGO_SUPERUSER_PASSWORD", "admin1234")
@@ -31,5 +31,6 @@ def create_superuser_if_needed():
         print(f"⚠️ DB 연결 불가 또는 마이그레이션 전 상태: {e}")
     except Exception as e:
         print(f"❌ 슈퍼유저 생성 중 오류: {e}")
+
 
 create_superuser_if_needed()
