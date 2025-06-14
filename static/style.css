@@ -13,11 +13,3 @@
     border-radius: 50%;
     margin-right: 5px;
 }
-
-html, body {
-  margin: 0;
-  padding: 0;
-  background-color: #4a90e2;  /* theme-color와 통일 */
-  height: 100vh;
-  overflow: hidden;  /* 주소창 상하 스크롤에 따른 깜빡임 방지 */
-}
