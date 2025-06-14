@@ -3,41 +3,44 @@
 {% load static %}
 
 {% block content %}
-<div style="max-width: 500px; margin: 2rem auto; padding: 20px; text-align: center;">
-    <div class="alert alert-warning">
-        <h4>⚠️ 읊조림 삭제</h4>
-        <p>정말로 이 읊조림을 삭제하시겠습니까?</p>
-        <p><strong>삭제된 내용은 복구할 수 없습니다.</strong></p>
-    </div>
 
-    <!-- 삭제할 읊조림 미리보기 -->
-    <div style="background: #f8f9fa; padding: 15px; border-radius: 10px; margin: 20px 0;">
-        {% if target_reciting.audio %}
-            <p><strong>🎵 읊조림 음성:</strong> 있음</p>
-        {% endif %}
+    <!-- ------------------------------ Content ------------------------------------- -->
+    <div style="max-width: 500px; margin: 2rem auto; padding: 20px; text-align: center;">
+        <div class="alert alert-warning">
+            <h4>⚠️ 읊조림 삭제</h4>
+            <p>정말로 이 읊조림을 삭제하시겠습니까?</p>
+            <p><strong>삭제된 내용은 복구할 수 없습니다.</strong></p>
+        </div>
 
-        {% with attached_file=target_reciting.get_attached_file %}
-            {% if attached_file %}
-                <p><strong>📷 첨부 파일:</strong>
-                {% if target_reciting.selected_meditation == 'med_first' %}
-                    묵상 이미지 1
-                {% elif target_reciting.selected_meditation == 'med_second' %}
-                    묵상 이미지 2
-                {% elif target_reciting.selected_meditation == 'med_video' %}
-                    묵상 영상
-                {% endif %}
-                </p>
+        <!-- 삭제할 읊조림 미리보기 -->
+        <div style="background: #f8f9fa; padding: 15px; border-radius: 10px; margin: 20px 0;">
+            {% if target_reciting.audio %}
+                <p><strong>🎵 읊조림 음성:</strong> 있음</p>
             {% endif %}
-        {% endwith %}
 
-        <p><strong>작성일:</strong> {{ target_reciting.created_at|date:"Y년 m월 d일 H:i" }}</p>
+            {% with attached_file=target_reciting.get_attached_file %}
+                {% if attached_file %}
+                    <p><strong>📷 첨부 파일:</strong>
+                    {% if target_reciting.selected_meditation == 'med_first' %}
+                        묵상 이미지 1
+                    {% elif target_reciting.selected_meditation == 'med_second' %}
+                        묵상 이미지 2
+                    {% elif target_reciting.selected_meditation == 'med_video' %}
+                        묵상 영상
+                    {% endif %}
+                    </p>
+                {% endif %}
+            {% endwith %}
+
+            <p><strong>작성일:</strong> {{ target_reciting.created_at|date:"Y년 m월 d일 H:i" }}</p>
+        </div>
+
+        <!-- 삭제 확인 폼 -->
+        <form method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger me-3">🗑️ 삭제하기</button>
+            <a href="{% url 'truthapp:list' %}" class="btn btn-secondary">취소</a>
+        </form>
     </div>
 
-    <!-- 삭제 확인 폼 -->
-    <form method="post">
-        {% csrf_token %}
-        <button type="submit" class="btn btn-danger me-3">🗑️ 삭제하기</button>
-        <a href="{% url 'truthapp:list' %}" class="btn btn-secondary">취소</a>
-    </form>
-</div>
 {% endblock %}

@@ -2,31 +2,31 @@
 {% load bootstrap4 %}
 
 {% block content %}
-<style>
-    /* 비밀번호 필드 스타일링 */
-    input[type="password"] {
-        font-family: 'Arial', sans-serif;
-        letter-spacing: 2px;
-    }
+    <style>
+        /* 비밀번호 필드 스타일링 */
+        input[type="password"] {
+            font-family: 'Arial', sans-serif;
+            letter-spacing: 2px;
+        }
 
-    input[type="password"]::placeholder {
-        font-family: inherit;
-        letter-spacing: normal;
-    }
+        input[type="password"]::placeholder {
+            font-family: inherit;
+            letter-spacing: normal;
+        }
 
-    /* 포커스 시 스타일 개선 */
-    input[type="password"]:focus {
-        border-color: #007bff;
-        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
-    }
+        /* 포커스 시 스타일 개선 */
+        input[type="password"]:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+        }
 
-    /* 입력 필드 전체 스타일 통일 */
-    .form-control {
-        border-radius: 5px;
-        border: 1px solid #ced4da;
-        padding: 8px 12px;
-    }
-</style>
+        /* 입력 필드 전체 스타일 통일 */
+        .form-control {
+            border-radius: 5px;
+            border: 1px solid #ced4da;
+            padding: 8px 12px;
+        }
+    </style>
 
     <div class="container">
         <div class="mb-4">
@@ -51,14 +51,17 @@
                 {{ form.password_confirm }}
             </div>
 
-            <div class="text-center mt-4">
-                <button type="submit" class="btn btn-primary rounded-pill btn-sm col-4 mt-3">
-                    제출
-                </button>
-                <a href="{% url 'accountapp:detail' pk=user.pk %}" class="btn btn-outline-secondary rounded-pill btn-sm col-4 mt-3">
-                    ✖️ 취소
-                </a>
-            </div>
+            <!-- 버튼 -->
+           <div class="container mt-4">
+                <div class="d-flex justify-content-between" style="margin: 0 1rem;">
+                    <a href="{% url 'accountapp:detail' pk=user.pk %}" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left me-1"></i>등록 취소
+                    </a>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save me-1"></i>변경 등록
+                    </button>
+                </div>
+           </div>
         </form>
         <br>
         <a href="{% url 'accountapp:delete' pk=user.pk %}" class = "btn btn-danger rounded-pill btn-sm col-3" style="text-decoration-line: none;">

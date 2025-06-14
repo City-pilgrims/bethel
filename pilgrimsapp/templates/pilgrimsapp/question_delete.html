@@ -3,151 +3,154 @@
 {% load static %}
 
 {% block content %}
-<div class="container mt-4">
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="card border-danger">
-                <div class="card-header bg-danger text-white text-center">
-                    <h4 class="mb-0">
-                        <i class="fas fa-exclamation-triangle me-2"></i>질문 삭제
-                    </h4>
-                </div>
-                <div class="card-body">
-                    <div class="alert alert-danger">
-                        <h5 class="alert-heading">
-                            <i class="fas fa-warning me-2"></i>주의!
-                        </h5>
-                        <p class="mb-0">이 작업은 되돌릴 수 없습니다. 질문과 관련된 모든 답변도 함께 삭제됩니다.</p>
+    <!-- There is no style in this html. -->
+
+    <!-- ------------------------------ Content ------------------------------------- -->
+    <div class="container mt-4">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card border-danger">
+                    <div class="card-header bg-danger text-white text-center">
+                        <h4 class="mb-0">
+                            <i class="fas fa-exclamation-triangle me-2"></i>질문 삭제
+                        </h4>
                     </div>
-
-                    <!-- 질문 정보 표시 -->
-                    <div class="card mb-3">
-                        <div class="card-header">
-                            <h6 class="mb-0">삭제될 질문</h6>
+                    <div class="card-body">
+                        <div class="alert alert-danger">
+                            <h5 class="alert-heading">
+                                <i class="fas fa-warning me-2"></i>주의!
+                            </h5>
+                            <p class="mb-0">이 작업은 되돌릴 수 없습니다. 질문과 관련된 모든 답변도 함께 삭제됩니다.</p>
                         </div>
-                        <div class="card-body">
-                            <div class="mb-2">
-                                <span class="badge bg-secondary me-2">{{ question.get_category_display }}</span>
-                                {% if question.is_secret %}
-                                    <span class="badge bg-warning">
-                                        <i class="fas fa-lock me-1"></i>비밀글
-                                    </span>
-                                {% endif %}
-                                {% if question.is_answered %}
-                                    <span class="badge bg-success">답변완료</span>
-                                {% else %}
-                                    <span class="badge bg-secondary">답변대기</span>
-                                {% endif %}
+
+                        <!-- 질문 정보 표시 -->
+                        <div class="card mb-3">
+                            <div class="card-header">
+                                <h6 class="mb-0">삭제될 질문</h6>
                             </div>
+                            <div class="card-body">
+                                <div class="mb-2">
+                                    <span class="badge bg-secondary me-2">{{ question.get_category_display }}</span>
+                                    {% if question.is_secret %}
+                                        <span class="badge bg-warning">
+                                            <i class="fas fa-lock me-1"></i>비밀글
+                                        </span>
+                                    {% endif %}
+                                    {% if question.is_answered %}
+                                        <span class="badge bg-success">답변완료</span>
+                                    {% else %}
+                                        <span class="badge bg-secondary">답변대기</span>
+                                    {% endif %}
+                                </div>
 
-                            <h6 class="card-title">{{ question.title }}</h6>
+                                <h6 class="card-title">{{ question.title }}</h6>
 
-                            <div class="text-muted small mb-2">
-                                <i class="fas fa-user me-1"></i>{{ question.author.username }}
-                                <i class="fas fa-calendar ms-3 me-1"></i>{{ question.created_at|date:"Y-m-d H:i" }}
-                                <i class="fas fa-eye ms-3 me-1"></i>{{ question.views }}회
-                            </div>
+                                <div class="text-muted small mb-2">
+                                    <i class="fas fa-user me-1"></i>{{ question.author.username }}
+                                    <i class="fas fa-calendar ms-3 me-1"></i>{{ question.created_at|date:"Y-m-d H:i" }}
+                                    <i class="fas fa-eye ms-3 me-1"></i>{{ question.views }}회
+                                </div>
 
-                            <div class="card-text">
-                                {{ question.content|truncatewords:20|linebreaks }}
-                                {% if question.content|length > 100 %}
-                                    <span class="text-muted">...</span>
-                                {% endif %}
+                                <div class="card-text">
+                                    {{ question.content|truncatewords:20|linebreaks }}
+                                    {% if question.content|length > 100 %}
+                                        <span class="text-muted">...</span>
+                                    {% endif %}
+                                </div>
                             </div>
                         </div>
+
+                        <!-- 답변 정보 -->
+                        {% if question.answers.count > 0 %}
+                            <div class="alert alert-warning">
+                                <h6 class="alert-heading">
+                                    <i class="fas fa-comments me-2"></i>관련 답변
+                                </h6>
+                                <p class="mb-2">
+                                    이 질문에는 <strong>{{ question.answers.count }}개의 답변</strong>이 있습니다.
+                                </p>
+                                <div class="small">
+                                    {% for answer in question.answers.all|slice:":3" %}
+                                        <div class="border-start border-3 border-secondary ps-2 mb-1">
+                                            <strong>{{ answer.author.username }}</strong>
+                                            {% if answer.is_official %}
+                                                <span class="badge bg-primary ms-1">공식답변</span>
+                                            {% endif %}
+                                            <div class="text-muted">{{ answer.content|truncatewords:15 }}</div>
+                                        </div>
+                                    {% endfor %}
+                                    {% if question.answers.count > 3 %}
+                                        <div class="text-muted">그 외 {{ question.answers.count|add:"-3" }}개의 답변...</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        {% endif %}
+
+                        <!-- 삭제 확인 폼 -->
+                        <form method="post" class="mt-4">
+                            {% csrf_token %}
+
+                            <div class="form-check mb-3">
+                                <input class="form-check-input" type="checkbox" id="confirmDelete" required>
+                                <label class="form-check-label" for="confirmDelete">
+                                    <strong>위 내용을 확인했으며, 질문을 삭제하겠습니다.</strong>
+                                </label>
+                            </div>
+
+                            <div class="d-flex justify-content-between">
+                                <a href="{% url 'pilgrimsapp:detail' question.pk %}" class="btn btn-secondary">
+                                    <i class="fas fa-arrow-left me-1"></i>취소
+                                </a>
+                                <button type="submit" class="btn btn-danger" id="deleteBtn" disabled>
+                                    <i class="fas fa-trash me-1"></i>삭제하기
+                                </button>
+                            </div>
+                        </form>
                     </div>
-
-                    <!-- 답변 정보 -->
-                    {% if question.answers.count > 0 %}
-                        <div class="alert alert-warning">
-                            <h6 class="alert-heading">
-                                <i class="fas fa-comments me-2"></i>관련 답변
-                            </h6>
-                            <p class="mb-2">
-                                이 질문에는 <strong>{{ question.answers.count }}개의 답변</strong>이 있습니다.
-                            </p>
-                            <div class="small">
-                                {% for answer in question.answers.all|slice:":3" %}
-                                    <div class="border-start border-3 border-secondary ps-2 mb-1">
-                                        <strong>{{ answer.author.username }}</strong>
-                                        {% if answer.is_official %}
-                                            <span class="badge bg-primary ms-1">공식답변</span>
-                                        {% endif %}
-                                        <div class="text-muted">{{ answer.content|truncatewords:15 }}</div>
-                                    </div>
-                                {% endfor %}
-                                {% if question.answers.count > 3 %}
-                                    <div class="text-muted">그 외 {{ question.answers.count|add:"-3" }}개의 답변...</div>
-                                {% endif %}
-                            </div>
-                        </div>
-                    {% endif %}
-
-                    <!-- 삭제 확인 폼 -->
-                    <form method="post" class="mt-4">
-                        {% csrf_token %}
-
-                        <div class="form-check mb-3">
-                            <input class="form-check-input" type="checkbox" id="confirmDelete" required>
-                            <label class="form-check-label" for="confirmDelete">
-                                <strong>위 내용을 확인했으며, 질문을 삭제하겠습니다.</strong>
-                            </label>
-                        </div>
-
-                        <div class="d-flex justify-content-between">
-                            <a href="{% url 'pilgrimsapp:detail' question.pk %}" class="btn btn-secondary">
-                                <i class="fas fa-arrow-left me-1"></i>취소
-                            </a>
-                            <button type="submit" class="btn btn-danger" id="deleteBtn" disabled>
-                                <i class="fas fa-trash me-1"></i>삭제하기
-                            </button>
-                        </div>
-                    </form>
                 </div>
-            </div>
 
-            <!-- 추가 안내 -->
-            <div class="mt-3">
-                <div class="card bg-light">
-                    <div class="card-body text-center">
-                        <small class="text-muted">
-                            <i class="fas fa-info-circle me-1"></i>
-                            삭제 후에는 질문 목록으로 이동합니다.
-                        </small>
+                <!-- 추가 안내 -->
+                <div class="mt-3">
+                    <div class="card bg-light">
+                        <div class="card-body text-center">
+                            <small class="text-muted">
+                                <i class="fas fa-info-circle me-1"></i>
+                                삭제 후에는 질문 목록으로 이동합니다.
+                            </small>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
-<script>
-// 삭제 확인 체크박스와 삭제 버튼 연동
-document.addEventListener('DOMContentLoaded', function() {
-    const confirmCheckbox = document.getElementById('confirmDelete');
-    const deleteBtn = document.getElementById('deleteBtn');
+    <script>
+    // 삭제 확인 체크박스와 삭제 버튼 연동
+    document.addEventListener('DOMContentLoaded', function() {
+        const confirmCheckbox = document.getElementById('confirmDelete');
+        const deleteBtn = document.getElementById('deleteBtn');
 
-    confirmCheckbox.addEventListener('change', function() {
-        if (this.checked) {
-            deleteBtn.disabled = false;
-            deleteBtn.classList.remove('btn-secondary');
-            deleteBtn.classList.add('btn-danger');
-        } else {
-            deleteBtn.disabled = true;
-            deleteBtn.classList.remove('btn-danger');
-            deleteBtn.classList.add('btn-secondary');
-        }
+        confirmCheckbox.addEventListener('change', function() {
+            if (this.checked) {
+                deleteBtn.disabled = false;
+                deleteBtn.classList.remove('btn-secondary');
+                deleteBtn.classList.add('btn-danger');
+            } else {
+                deleteBtn.disabled = true;
+                deleteBtn.classList.remove('btn-danger');
+                deleteBtn.classList.add('btn-secondary');
+            }
+        });
+
+        // 폼 제출 시 한 번 더 확인
+        deleteBtn.closest('form').addEventListener('submit', function(e) {
+            if (!confirm('정말로 이 질문을 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.')) {
+                e.preventDefault();
+            }
+        });
     });
+    </script>
 
-    // 폼 제출 시 한 번 더 확인
-    deleteBtn.closest('form').addEventListener('submit', function(e) {
-        if (!confirm('정말로 이 질문을 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.')) {
-            e.preventDefault();
-        }
-    });
-});
-</script>
-
-<!-- Font Awesome for icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 {% endblock %}

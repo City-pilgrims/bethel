@@ -15,6 +15,7 @@
         }
     </style>
 
+    <!-- ------------------------------ Content ------------------------------------- -->
     <form method="post" enctype="multipart/form-data" class="text-center">
         {% csrf_token %}
 
@@ -41,6 +42,7 @@
     </form>
 
 
+    <!-- ------------------------------ Script ------------------------------------- -->
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             const imageInput = document.querySelector("#id_image");  // Django 폼에서 이미지 필드의 ID

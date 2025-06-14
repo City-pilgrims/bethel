@@ -3,255 +3,257 @@
 {% load static %}
 
 {% block content %}
-<style>
-    .page-header {
-        position: fixed;
-        top: 110px;
-        left: 50%;
-        transform: translateX(-50%);
-        max-width: 500px;
-        width: calc(100% - 40px);
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 0.5rem 0.5rem;
-        background: linear-gradient(135deg, #800020 0%, #B22222 100%);
-        color: white;
-        z-index: 100;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        margin: 0;
-        border-radius: 10px;
-    }
-
-    .header-title {
-        flex: 0 0 75%;
-        margin: 0;
-        font-size: 1rem;
-        font-weight: bold;
-        padding-right: 0.8rem;
-    }
-
-    .header-button-area {
-        flex: 0 0 25%;
-        display: flex;
-        justify-content: flex-end;
-        align-items: center;
-    }
-
-    .btn-header-create {
-        background: rgba(255, 255, 255, 0.2);
-        color: white;
-        border: 2px solid rgba(255, 255, 255, 0.3);
-        padding: 8px 20px;
-        border-radius: 25px;
-        font-weight: bold;
-        text-decoration: none;
-        transition: all 0.3s ease;
-        backdrop-filter: blur(10px);
-        white-space: nowrap;
-        font-size: 0.9rem;
-    }
-
-    .btn-header-create:hover {
-        background: rgba(255, 255, 255, 0.3);
-        color: white;
-        text-decoration: none;
-        transform: translateY(-1px);
-        box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
-    }
-
-     .card {
-         border: none !important; box-shadow: 0 1px 3px rgba(0,0,0,0.1) !important;
-     }
-
-    .table {
-        border: none !important;
-    }
-
-    .table td,
-    .table th {
-        border-left: none !important;
-        border-right: none !important;
-        border-bottom: none !important;
-        border-top: 1px solid #f1f3f4 !important; /* 미세한 구분선 */
-    }
-
-    .table thead th {
-        border-bottom: 2px solid #e9ecef !important;
-        border-top: none !important;
-        border-left: none !important;
-        border-right: none !important;
-        background-color: #f8f9fa;
-    }
-
-     /* 모바일 최적화 */
-    @media (max-width: 700px) {
+    <style>
         .page-header {
-            top: 100px;
+            position: fixed;
+            top: 110px;
+            left: 50%;
+            transform: translateX(-50%);
+            max-width: 500px;
+            width: calc(100% - 40px);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             padding: 0.5rem 0.5rem;
+            background: linear-gradient(135deg, #800020 0%, #B22222 100%);
+            color: white;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin: 0;
             border-radius: 10px;
         }
 
         .header-title {
-            font-size: 1.1rem;
             flex: 0 0 75%;
+            margin: 0;
+            font-size: 1rem;
+            font-weight: bold;
+            padding-right: 0.8rem;
         }
 
         .header-button-area {
             flex: 0 0 25%;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
         }
 
         .btn-header-create {
-            font-size: 0.75rem;
-            padding: 6px 12px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            padding: 8px 20px;
+            border-radius: 25px;
+            font-weight: bold;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            white-space: nowrap;
+            font-size: 0.9rem;
         }
 
-        .content-row {
-            gap: 8px;
+        .btn-header-create:hover {
+            background: rgba(255, 255, 255, 0.3);
+            color: white;
+            text-decoration: none;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
         }
-    }
 
-    @media (min-width: 700px) {
-        .table-responsive {
-            display: block;
+         .card {
+             border: none !important; box-shadow: 0 1px 3px rgba(0,0,0,0.1) !important;
+         }
+
+        .table {
+            border: none !important;
         }
-    }
-</style>
 
-<div class="container mt-4">
-    <!-- 고정된 페이지 헤더 -->
-    <div class="page-header">
-        <p class="header-title">&#10017; 진리가 자유케 하리라!</p>
-        <div class="header-button-area">
-            {% if user.is_authenticated %}
-                <a href="{% url 'pilgrimsapp:create' %}" class="btn-header-create">
-                    ✏️&nbsp작성
-                </a>
-            {% endif %}
-        </div>
-    </div>
-    <br>
-    <!-- 필터 및 검색 -->
-    <div class="card mb-4" style="border: none;">
-        <div class="card-body">
-            <form method="get" class="row g-2">
-                <div class="col-4 col-md-3">
-                    <label for="category" class="form-label">카테고리</label>
-                    <select name="category" id="category" class="form-select">
-                        <option value="">전체</option>
-                        {% for key, value in categories %}
-                            <option value="{{ key }}" {% if category == key %}selected{% endif %}>{{ value }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
+        .table td,
+        .table th {
+            border-left: none !important;
+            border-right: none !important;
+            border-bottom: none !important;
+            border-top: 1px solid #f1f3f4 !important; /* 미세한 구분선 */
+        }
 
-                <div class="col-5 col-md-5">
-                    <label for="search" class="form-label">키워드</label>
-                    <input type="text" name="search" id="search" class="form-control"
-                           placeholder="키워드를 넣으세요" value="{% if search_query and search_query != 'None' %}{{ search_query }}{% endif %}">
-                </div>
-                <div class="col-3 col-md-2 d-flex align-items-end justify-content-center">
-                    <button type="submit" class="btn btn-outline-primary w-40">검색</button>
-                </div>
-            </form>
-        </div>
-    </div>
+        .table thead th {
+            border-bottom: 2px solid #e9ecef !important;
+            border-top: none !important;
+            border-left: none !important;
+            border-right: none !important;
+            background-color: #f8f9fa;
+        }
 
-    <!-- 질문 목록 -->
-    <div class="card">
-        <div class="card-body p-0">
-            <div class="table-responsive">
-                <table class="table table-hover mb-0" style="font-size: 0.9rem;">
-                    <thead class="table-light">
-                        <tr>
-                            <th width="15%">🗂️</th>
-                            <th>제목</th>
-                            <th width="13%">⛪</th>
-                            <th width="14%">📅</th>
-                            <th width="8%">👀</th>
-                            <th width="8%">✔️</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for question in page_obj %}
-                        <tr>
-                            <!--<td>{{ forloop.counter|add:page_obj.start_index|add:"-1" }}</td>-->
-                            <td>
-                                <span class="badge bg-secondary">{{ question.get_category_display }}</span>
-                            </td>
-                            <td>
-                                <a href="{% url 'pilgrimsapp:detail' question.pk %}" class="text-decoration-none" style="color: #800020;">
-                                    {% if question.is_secret %}
-                                        <i class="fas fa-lock text-warning me-1"></i>
-                                    {% endif %}
-                                    {{ question.title }}
-                                    {% if question.answers.count > 0 %}
-                                        <span class="badge bg-info ms-1">{{ question.answers.count }}</span>
-                                    {% endif %}
-                                </a>
-                            </td>
-                            <td>{{ question.author.username }}</td>
-                            <td>{{ question.created_at|date:"m/d" }}</td>
-                            <td>{{ question.views }}</td>
-                            <td>
-                                {% if question.is_answered %}
-                                    <span class="badge bg-success">완료</span>
-                                {% else %}
-                                    <span class="badge bg-warning">대기</span>
-                                {% endif %}
-                            </td>
-                        </tr>
-                        {% empty %}
-                        <tr>
-                            <td colspan="7" class="text-center py-4">
-                                등록된 질문이 없습니다.
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+         /* 모바일 최적화 */
+        @media (max-width: 700px) {
+            .page-header {
+                top: 100px;
+                padding: 0.5rem 0.5rem;
+                border-radius: 10px;
+            }
+
+            .header-title {
+                font-size: 1.1rem;
+                flex: 0 0 75%;
+            }
+
+            .header-button-area {
+                flex: 0 0 25%;
+            }
+
+            .btn-header-create {
+                font-size: 0.75rem;
+                padding: 6px 12px;
+            }
+
+            .content-row {
+                gap: 8px;
+            }
+        }
+
+        @media (min-width: 700px) {
+            .table-responsive {
+                display: block;
+            }
+        }
+    </style>
+
+
+    <!-- ------------------------------ Content ------------------------------------- -->
+    <div class="container mt-4">
+        <!-- 고정된 페이지 헤더 -->
+        <div class="page-header">
+            <p class="header-title">&#10017; 진리가 자유케 하리라!</p>
+            <div class="header-button-area">
+                {% if user.is_authenticated %}
+                    <a href="{% url 'pilgrimsapp:create' %}" class="btn-header-create">
+                        ✏️&nbsp작성
+                    </a>
+                {% endif %}
             </div>
         </div>
-    </div>
+        <br>
+        <!-- 필터 및 검색 -->
+        <div class="card mb-4" style="border: none;">
+            <div class="card-body">
+                <form method="get" class="row g-2">
+                    <div class="col-4 col-md-3">
+                        <label for="category" class="form-label">카테고리</label>
+                        <select name="category" id="category" class="form-select">
+                            <option value="">전체</option>
+                            {% for key, value in categories %}
+                                <option value="{{ key }}" {% if category == key %}selected{% endif %}>{{ value }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
 
-    <!-- 페이지네이션 -->
-    {% if page_obj.has_other_pages %}
-    <nav aria-label="페이지 네비게이션" class="mt-4">
-        <ul class="pagination justify-content-center">
-            {% if page_obj.has_previous %}
-                <li class="page-item">
-                    <a class="page-link" href="?page=1{% if search_query %}&search={{ search_query }}{% endif %}{% if category %}&category={{ category }}{% endif %}{% if status %}&status={{ status }}{% endif %}">처음</a>
-                </li>
-                <li class="page-item">
-                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if category %}&category={{ category }}{% endif %}{% if status %}&status={{ status }}{% endif %}">이전</a>
-                </li>
-            {% endif %}
+                    <div class="col-5 col-md-5">
+                        <label for="search" class="form-label">키워드</label>
+                        <input type="text" name="search" id="search" class="form-control"
+                               placeholder="키워드를 넣으세요" value="{% if search_query and search_query != 'None' %}{{ search_query }}{% endif %}">
+                    </div>
+                    <div class="col-3 col-md-2 d-flex align-items-end justify-content-center">
+                        <button type="submit" class="btn btn-outline-primary w-40">검색</button>
+                    </div>
+                </form>
+            </div>
+        </div>
 
-            {% for num in page_obj.paginator.page_range %}
-                {% if page_obj.number == num %}
-                    <li class="page-item active">
-                        <span class="page-link">{{ num }}</span>
-                    </li>
-                {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+        <!-- 질문 목록 -->
+        <div class="card">
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0" style="font-size: 0.9rem;">
+                        <thead class="table-light">
+                            <tr>
+                                <th width="15%">🗂️</th>
+                                <th>제목</th>
+                                <th width="13%">⛪</th>
+                                <th width="14%">📅</th>
+                                <th width="8%">👀</th>
+                                <th width="8%">✔️</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for question in page_obj %}
+                            <tr>
+                                <!--<td>{{ forloop.counter|add:page_obj.start_index|add:"-1" }}</td>-->
+                                <td>
+                                    <span class="badge bg-secondary">{{ question.get_category_display }}</span>
+                                </td>
+                                <td>
+                                    <a href="{% url 'pilgrimsapp:detail' question.pk %}" class="text-decoration-none" style="color: #800020;">
+                                        {% if question.is_secret %}
+                                            <i class="fas fa-lock text-warning me-1"></i>
+                                        {% endif %}
+                                        {{ question.title }}
+                                        {% if question.answers.count > 0 %}
+                                            <span class="badge bg-info ms-1">{{ question.answers.count }}</span>
+                                        {% endif %}
+                                    </a>
+                                </td>
+                                <td>{{ question.author.username }}</td>
+                                <td>{{ question.created_at|date:"m/d" }}</td>
+                                <td>{{ question.views }}</td>
+                                <td>
+                                    {% if question.is_answered %}
+                                        <span class="badge bg-success">완료</span>
+                                    {% else %}
+                                        <span class="badge bg-warning">대기</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="7" class="text-center py-4">
+                                    등록된 질문이 없습니다.
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- 페이지네이션 -->
+        {% if page_obj.has_other_pages %}
+        <nav aria-label="페이지 네비게이션" class="mt-4">
+            <ul class="pagination justify-content-center">
+                {% if page_obj.has_previous %}
                     <li class="page-item">
-                        <a class="page-link" href="?page={{ num }}{% if search_query %}&search={{ search_query }}{% endif %}{% if category %}&category={{ category }}{% endif %}{% if status %}&status={{ status }}{% endif %}">{{ num }}</a>
+                        <a class="page-link" href="?page=1{% if search_query %}&search={{ search_query }}{% endif %}{% if category %}&category={{ category }}{% endif %}{% if status %}&status={{ status }}{% endif %}">처음</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if category %}&category={{ category }}{% endif %}{% if status %}&status={{ status }}{% endif %}">이전</a>
                     </li>
                 {% endif %}
-            {% endfor %}
 
-            {% if page_obj.has_next %}
-                <li class="page-item">
-                    <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if category %}&category={{ category }}{% endif %}{% if status %}&status={{ status }}{% endif %}">다음</a>
-                </li>
-                <li class="page-item">
-                    <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% if search_query %}&search={{ search_query }}{% endif %}{% if category %}&category={{ category }}{% endif %}{% if status %}&status={{ status }}{% endif %}">끝</a>
-                </li>
-            {% endif %}
-        </ul>
-    </nav>
-    {% endif %}
-</div>
+                {% for num in page_obj.paginator.page_range %}
+                    {% if page_obj.number == num %}
+                        <li class="page-item active">
+                            <span class="page-link">{{ num }}</span>
+                        </li>
+                    {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ num }}{% if search_query %}&search={{ search_query }}{% endif %}{% if category %}&category={{ category }}{% endif %}{% if status %}&status={{ status }}{% endif %}">{{ num }}</a>
+                        </li>
+                    {% endif %}
+                {% endfor %}
 
-<!-- Font Awesome for icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+                {% if page_obj.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if category %}&category={{ category }}{% endif %}{% if status %}&status={{ status }}{% endif %}">다음</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% if search_query %}&search={{ search_query }}{% endif %}{% if category %}&category={{ category }}{% endif %}{% if status %}&status={{ status }}{% endif %}">끝</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
+        {% endif %}
+    </div>
+
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 {% endblock %}

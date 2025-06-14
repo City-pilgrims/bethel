@@ -5,61 +5,7 @@
 
 {% block content %}
 
-    <div class="container">
-        <div class="left-box">
-            <div class="profile-header">
-                {% if pilboard.author.profile %}
-                    <img src="{{ pilboard.author.profile.image.url }}"
-                         alt="{{ pilboard.author.profile.nickname }}" style="height: 20px; width: 20px;">
-                    <span style="color: black; font-size: 0.7rem;">{{ pilboard.author.profile.nickname }}</span>
-                    &nbsp∙&nbsp
-                    <p class="text-sm text-gray-600 dark:text-gray-400" style="font-size:0.7rem; color:gray; margin: 0; margin-right: 1.5rem;">
-                        {{ pilboard.created_at|format_date }}
-                    </p>
-                {% else %}
-                    <h7 style="color: black;">{{ pilboard.author.profile.nickname }}</h7>
-                {% endif %}
-            </div>
-        </div>
-        <div class="right-box">
-            {% if pilboard.author == user %}
-                <div>
-                    <button style="border: none; outline: none; background: transparent; cursor:pointer;" onclick="toggleActions(event)">
-                        <img src="{% static 'edit_post.jpg' %}" alt="post"
-                            style="width: 22px; height: 22px; cursor: pointer;">
-                    </button>
-                    <!-- Update and Delete buttons, initially hidden -->
-                    <div id="popup-actions" class="popup-actions" style="display: none;">
-                        <a href="{% url 'pilgrimsapp:pilboardupdate' pk=pilboard.pk %}" class = "btn btn-success rounded-pill btn-sm col-22">업데이트</a>
-                        <a href="{% url 'pilgrimsapp:pilboarddelete' pk=pilboard.pk %}" class = "btn btn-danger rounded-pill btn-sm col-22" onclick="return confirmDelete();">삭제</a>
-                    </div>
-                </div>
-                &nbsp
-                <div>
-                    <a href="{% url 'pilgrimsapp:pilboardlist' %}" style="text-decoration-line: none; display: flex; align-items: center;">
-                        👀
-                    </a>
-                </div>
-            {% endif %}
-        </div>
-        <!-- 팝업 오버레이 (클릭 시 닫기 가능) -->
-        <div id="overlay" class="overlay" style="display: none;" onclick="closePopup()"></div>
-    </div>
-    <div class="container-content">
-        <div class="word-wrap">
-            <p>{{ pilboard.content|linebreaks }}</p>
-        </div>
-
-        <div>
-            {% if pilboard.image %}
-                <img src="{{ pilboard.image.url }}" alt="Image" >
-            {% endif %}
-        </div>
-    </div>
-
-
-    <style>
-
+        <style>
         .container {
             display: flex; /* 자식 요소들을 수평으로 배치 */
             justify-content: flex-start; /* 자식 요소들 사이의 공간을 고르게 분배 */
@@ -134,6 +80,62 @@
             word-break: keep-all;       /* 단어가 너무 길면 중간에서 강제로 줄 바꿈 */
         }
     </style>
+
+
+    <!-- ------------------------------ Content ------------------------------------- -->
+    <div class="container">
+        <div class="left-box">
+            <div class="profile-header">
+                {% if pilboard.author.profile %}
+                    <img src="{{ pilboard.author.profile.image.url }}"
+                         alt="{{ pilboard.author.profile.nickname }}" style="height: 20px; width: 20px;">
+                    <span style="color: black; font-size: 0.7rem;">{{ pilboard.author.profile.nickname }}</span>
+                    &nbsp∙&nbsp
+                    <p class="text-sm text-gray-600 dark:text-gray-400" style="font-size:0.7rem; color:gray; margin: 0; margin-right: 1.5rem;">
+                        {{ pilboard.created_at|format_date }}
+                    </p>
+                {% else %}
+                    <h7 style="color: black;">{{ pilboard.author.profile.nickname }}</h7>
+                {% endif %}
+            </div>
+        </div>
+        <div class="right-box">
+            {% if pilboard.author == user %}
+                <div>
+                    <button style="border: none; outline: none; background: transparent; cursor:pointer;" onclick="toggleActions(event)">
+                        <img src="{% static 'edit_post.jpg' %}" alt="post"
+                            style="width: 22px; height: 22px; cursor: pointer;">
+                    </button>
+                    <!-- Update and Delete buttons, initially hidden -->
+                    <div id="popup-actions" class="popup-actions" style="display: none;">
+                        <a href="{% url 'pilgrimsapp:pilboardupdate' pk=pilboard.pk %}" class = "btn btn-success rounded-pill btn-sm col-22">업데이트</a>
+                        <a href="{% url 'pilgrimsapp:pilboarddelete' pk=pilboard.pk %}" class = "btn btn-danger rounded-pill btn-sm col-22" onclick="return confirmDelete();">삭제</a>
+                    </div>
+                </div>
+                &nbsp
+                <div>
+                    <a href="{% url 'pilgrimsapp:pilboardlist' %}" style="text-decoration-line: none; display: flex; align-items: center;">
+                        👀
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+        <!-- 팝업 오버레이 (클릭 시 닫기 가능) -->
+        <div id="overlay" class="overlay" style="display: none;" onclick="closePopup()"></div>
+    </div>
+    <div class="container-content">
+        <div class="word-wrap">
+            <p>{{ pilboard.content|linebreaks }}</p>
+        </div>
+
+        <div>
+            {% if pilboard.image %}
+                <img src="{{ pilboard.image.url }}" alt="Image" >
+            {% endif %}
+        </div>
+    </div>
+
+
 
     <script>
         ////////////////// Toggle visibility of update and delete buttons //////////////

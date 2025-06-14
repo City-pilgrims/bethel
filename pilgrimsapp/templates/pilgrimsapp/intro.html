@@ -4,58 +4,7 @@
 
 {% block content %}
 
-    <div style="margin-bottom: 2rem;">
-        <div id="imageCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000">
-            <!-- Slides -->
-            <div class="carousel-inner">
-                {% for img in image_list %}
-                <div class="carousel-item {% if forloop.first %}active{% endif %}">
-                    <img src="{% static img %}" class="d-block" style="width: 100%; height: 320px; object-fit: cover;" alt="{{ forloop.counter }}">
-                </div>
-                {% endfor %}
-            </div>
-        </div>
-    </div>
-
-    <button onclick="openAPP()" data-bs-toggle="modal" data-bs-target="#commentModal"
-        style="text-decoration-line: underline; border: none; outline: none; background: transparent; cursor:pointer; font-size: 1.2rem;">
-        <p class="sparkle-text">Timeline of Pilgrims Church<br>since 2012</p>
-    </button>
-     <!-- Modal -->
-    <div class="modal fade" id="commentModal" tabindex="-1" aria-labelledby="commentModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h6 class="modal-title w-100 text-center" id="commentModalLabel">Timeline of Pilgrims Church</h6>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body" id="modal-body">
-                    <!-- Timeline content will be dynamically added here -->
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div style="padding: 15px; margin-top: 0.5rem;">
-        <p style="text-align: center; font-size: 2rem; font-weight: bold; color: #008B8B; font-family: NanumDdoBagDdoBag;">
-            우리는 하나님나라를 소망하기에,<br>침노하는 믿음으로 함께 걸으며,<br>사랑의 힘으로 승리하는 순례자들입니다.
-            <br>
-            &#10077; We are City Pilgrims. &#10078;
-        </p>
-    </div>
-
-    <br>
-
-    <div style="display: flex; align-items: center; justify-content: center; margin-top: 1rem;">
-        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3165.0138423197295!2d127.04318101196088!3d37.507591671937355!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x357ca40ed17c2485%3A0x26198dbfad977d6e!2z7ISc7Jq47Yq567OE7IucIOqwleuCqOq1rCDshKDrponroZwgNTQ3!5e0!3m2!1sko!2skr!4v1736607657667!5m2!1sko!2skr" width="90%" height="200" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-    </div>
-        <div style="padding: 15px; margin-top: 0.5rem;">
-        <p style="text-align: left; font-size: 0.9rem;">
-            Address of All Nation's Church: 서울특별시 강남구
-        </p>
-    </div>
-
-    <style>
+        <style>
         .carousel-item {
             transition: transform 0.2s ease-in-out !important;
         }
@@ -122,7 +71,6 @@
             animation: sparkle 1s ease-in-out infinite;
         }
 
-
         .timeline-item {
             display: flex;
             justify-content: space-between;
@@ -178,6 +126,61 @@
         }
     </style>
 
+
+    <!-- ------------------------------ Content ------------------------------------- -->
+    <div style="margin-bottom: 2rem;">
+        <div id="imageCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000">
+            <!-- Slides -->
+            <div class="carousel-inner">
+                {% for img in image_list %}
+                <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                    <img src="{% static img %}" class="d-block" style="width: 100%; height: 320px; object-fit: cover;" alt="{{ forloop.counter }}">
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <button onclick="openAPP()" data-bs-toggle="modal" data-bs-target="#commentModal"
+        style="text-decoration-line: underline; border: none; outline: none; background: transparent; cursor:pointer; font-size: 1.2rem;">
+        <p class="sparkle-text">Timeline of Pilgrims Church<br>since 2012</p>
+    </button>
+     <!-- Modal -->
+    <div class="modal fade" id="commentModal" tabindex="-1" aria-labelledby="commentModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h6 class="modal-title w-100 text-center" id="commentModalLabel">Timeline of Pilgrims Church</h6>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="modal-body">
+                    <!-- Timeline content will be dynamically added here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div style="padding: 15px; margin-top: 0.5rem;">
+        <p style="text-align: center; font-size: 2rem; font-weight: bold; color: #008B8B; font-family: NanumDdoBagDdoBag;">
+            우리는 하나님나라를 소망하기에,<br>침노하는 믿음으로 함께 걸으며,<br>사랑의 힘으로 승리하는 순례자들입니다.
+            <br>
+            &#10077; We are City Pilgrims. &#10078;
+        </p>
+    </div>
+
+    <br>
+
+    <div style="display: flex; align-items: center; justify-content: center; margin-top: 1rem;">
+        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3165.0138423197295!2d127.04318101196088!3d37.507591671937355!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x357ca40ed17c2485%3A0x26198dbfad977d6e!2z7ISc7Jq47Yq567OE7IucIOqwleuCqOq1rCDshKDrponroZwgNTQ3!5e0!3m2!1sko!2skr!4v1736607657667!5m2!1sko!2skr" width="90%" height="200" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+    </div>
+        <div style="padding: 15px; margin-top: 0.5rem;">
+        <p style="text-align: left; font-size: 0.9rem;">
+            Address of All Nation's Church: 서울특별시 강남구
+        </p>
+    </div>
+
+
+    <!-- ------------------------------ Script ------------------------------------- -->
     <script>
 
         // 팝업창에 뷰로 연결해서 데이터를 가져오고 팝업창 내 정보 표출
@@ -224,18 +227,3 @@
     </script>
 
 {% endblock %}
-
-
-    <!--
-    <div class="container">
-        <div class="left-box">
-            <img src="{% static 'flags/Korea.jpg' %}" style="width: 90%; height: 60px; object-fit: contain;">
-        </div>
-        <div class="mid-box">
-            <img src="{% static 'flags/Israel.jpg' %}" style="width: 80%; height: 60px; object-fit: contain;">
-        </div>
-        <div class="right-box">
-            <img src="{% static 'flags/America.jpg' %}" style="width: 80%; height: auto; object-fit: contain;">
-        </div>
-    </div>
-    -->

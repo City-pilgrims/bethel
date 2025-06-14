@@ -2,58 +2,9 @@
 {% load bootstrap4 %}
 {% load static %}
 {% load custom_filters %}
+{% load group_tags %}
 
 {% block content %}
-    <!-- 고정된 페이지 헤더 -->
-    <div class="page-header">
-        <p class="header-title">&#10017; 일어나라 빛을 발하라!</p>
-        <div class="header-button-area">
-            {% if user.is_authenticated %}
-                {% for group in request.user.groups.all %}
-                    {% if group.name == "Toledot" %}
-                        <a href="{% url 'pilgrimsapp:pilboardcreate' %}" class="btn-header-create">
-                            ✏️&nbsp작성
-                        </a>
-                    {% endif %}
-                {% endfor %}
-            {% endif %}
-        </div>
-    </div>
-    <!-- 여백 추가 (오타 수정) -->
-    <div style="padding-top: 30px;">
-        {% for pilboard in pilboards %}
-            <div class="container">
-                <div class="profile-header">
-                    {% if pilboard.author.profile %}
-                        <img src="{{ pilboard.author.profile.image.url }}"
-                             alt="{{ pilboard.author.profile.nickname }}" style="height: 20px; width: 20px;">
-                        <span style="color: black; font-size: 0.7rem;">{{ pilboard.author.profile.nickname }}</span>
-                        &nbsp∙&nbsp
-                        <p class="text-sm text-gray-600 dark:text-gray-400" style="font-size:0.7rem; color:gray; margin: 0; margin-right: 1.5rem;">
-                            {{ pilboard.created_at|format_date }}
-                        </p>
-                    {% else %}
-                        <h6 style="color: black;">{{ pilboard.author.profile.nickname }}</h6>
-                    {% endif %}
-                </div>
-            </div>
-            <div>
-                <a href="{% url 'pilgrimsapp:pilboarddetail' pk=pilboard.pk %}" style="text-decoration-line: none; color: black;">
-                    <div class="board-container">
-                        <div class="board-content">
-                            <p>{{ pilboard.content|slice:":56" }} {% if pilboard.content|length > 56 %}...{% endif %}</p>
-                        </div>
-
-                        <div class="board-image">
-                            {% if pilboard.image %}
-                                <img src="{{ pilboard.image.url }}" alt="Image" >
-                            {% endif %}
-                        </div>
-                    </div>
-                </a>
-            </div>
-        {% endfor %}
-    </div>
 
     <style>
         .page-header {
@@ -167,5 +118,56 @@
         }
 
     </style>
+
+
+    <!-- ------------------------------ Content ------------------------------------- -->
+    <!-- 고정된 페이지 헤더 -->
+    <div class="page-header">
+        <p class="header-title">&#10017; 일어나라 빛을 발하라!</p>
+        <div class="header-button-area">
+            {% if user.is_authenticated %}
+                {% if request.user|in_groups:"Toledot,Commander" %}
+                    <a href="{% url 'pilgrimsapp:pilboardcreate' %}" class="btn-header-create">
+                        ✏️&nbsp작성
+                    </a>
+                {% endif %}
+            {% endif %}
+        </div>
+    </div>
+    <!-- 여백 추가 (오타 수정) -->
+    <div style="padding-top: 30px;">
+        {% for pilboard in pilboards %}
+            <div class="container">
+                <div class="profile-header">
+                    {% if pilboard.author.profile %}
+                        <img src="{{ pilboard.author.profile.image.url }}"
+                             alt="{{ pilboard.author.profile.nickname }}" style="height: 20px; width: 20px;">
+                        <span style="color: black; font-size: 0.7rem;">{{ pilboard.author.profile.nickname }}</span>
+                        &nbsp∙&nbsp
+                        <p class="text-sm text-gray-600 dark:text-gray-400" style="font-size:0.7rem; color:gray; margin: 0; margin-right: 1.5rem;">
+                            {{ pilboard.created_at|format_date }}
+                        </p>
+                    {% else %}
+                        <h6 style="color: black;">{{ pilboard.author.profile.nickname }}</h6>
+                    {% endif %}
+                </div>
+            </div>
+            <div>
+                <a href="{% url 'pilgrimsapp:pilboarddetail' pk=pilboard.pk %}" style="text-decoration-line: none; color: black;">
+                    <div class="board-container">
+                        <div class="board-content">
+                            <p>{{ pilboard.content|slice:":56" }} {% if pilboard.content|length > 56 %}...{% endif %}</p>
+                        </div>
+
+                        <div class="board-image">
+                            {% if pilboard.image %}
+                                <img src="{{ pilboard.image.url }}" alt="Image" >
+                            {% endif %}
+                        </div>
+                    </div>
+                </a>
+            </div>
+        {% endfor %}
+    </div>
 
 {% endblock %}

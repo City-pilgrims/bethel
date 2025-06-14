@@ -21,8 +21,11 @@ class NoteCreateView(LoginRequiredMixin, CreateView):
     extra_context = {"form_title": "매일순례"}
 
     def dispatch(self, request, *args, **kwargs):
-        if not request.user.groups.filter(name="Toledot").exists():
-            messages.error(request, "순례자들교회 지체들만 작성가능합니다.")
+        if not (
+                request.user.groups.filter(name="Toledot").exists() or
+                request.user.groups.filter(name="Commander").exists()
+        ):
+            messages.error(request, "순례자들교회 등록 지체들만 작성가능합니다.")
             return redirect("wayapp:list")
         return super().dispatch(request, *args, **kwargs)
 
@@ -135,6 +138,14 @@ def SPindex(request):
 
 @login_required
 def SPadd_item(request):
+    if not (
+            request.user.groups.filter(name='Toledot').exists() or
+            request.user.groups.filter(name='Commander').exists()
+    ):
+        messages.error(request, "순례자들교회 등록 지체들만 작성가능합니다.")
+        return redirect("wayapp:splist")
+        #return JsonResponse({'error': 'Toledot 그룹만 작성할 수 있습니다.'}, status=403)
+
     if request.method == "POST":
         author = request.user
         selected_pil_group = request.POST.get('pil_group')
@@ -262,6 +273,13 @@ def SPdelete(request, pk):
 
 @login_required
 def PILvideo_upload(request):
+    if not (
+            request.user.groups.filter(name='Toledot').exists() or
+            request.user.groups.filter(name='Commander').exists()
+    ):
+        messages.error(request, "순례자들교회 등록 지체들만 작성가능합니다.")
+        return redirect('wayapp:pilvideolist')
+
     if request.method == "POST":
         form = VideoForm(request.POST, request.FILES)
         if form.is_valid():

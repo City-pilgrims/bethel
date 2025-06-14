@@ -4,70 +4,7 @@
 {% load custom_filters %}
 
 {% block content %}
-
-    <div class="container">
-        <div class="left-box">
-            <div class="profile-header">
-                {% if special_pilgrim.author.profile %}
-                    <img src="{{ special_pilgrim.author.profile.image.url }}" alt="{{ special_pilgrim.author.profile.nickname }}">
-                    <h7 style="color: black;">{{ special_pilgrim.author.profile.nickname }}</h7>
-                {% else %}
-                    <h7 style="color: black;">{{ special_pilgrim.author.profile.nickname }}</h7>
-                {% endif %}
-            </div>
-        </div>
-        <div class="right-box">
-            {% if special_pilgrim.author == user %}
-                <div>
-                    <button style="border: none; outline: none; background: transparent; cursor:pointer;" onclick="toggleActions()">
-                        &#65049
-                    </button>
-                    <!-- Update and Delete buttons, initially hidden -->
-                    <div id="popup-actions" class="popup-actions" style="display: none;">
-                        <a href="{% url 'wayapp:spupdate' pk=special_pilgrim.pk %}" class = "btn btn-success rounded-pill btn-sm col-22">Update</a>
-                        <a href="{% url 'wayapp:spdelete' pk=special_pilgrim.pk %}" class = "btn btn-danger rounded-pill btn-sm col-22" onclick="return confirmDelete();">Delete</a>
-                    </div>
-                </div>
-            {% endif %}
-        </div>
-        <!-- 팝업 오버레이 (클릭 시 닫기 가능) -->
-        <div id="overlay" class="overlay" style="display: none;" onclick="closePopup()"></div>
-    </div>
-
-    <a href="{% url 'wayapp:splist' %}" style="text-decoration-line: none;">
-        <p style="font-family: NanumDdoBagDdoBag; font-weight: bold; font-size: 2rem; color: black;">{{ special_pilgrim.group }} 순례 기록</p>
-    </a>
-    <div>
-        {% for image, description in image_description_pairs %}
-            <div style="margin-bottom: 2rem;">
-                <div class="word-wrap" style="margin: 0.5rem 0.7rem auto 0.7rem; text-align: left;"> <!--margin up, right, down, left-->
-                    <p class="card-text">
-                        {{ description.text|linebreaks }}
-                    </p>
-                </div>
-                <img src="{{ image.image.url }}" alt="이미지" class="card-img-top" style="border-radius: 10px;">
-                <br>
-            </div>
-        {% empty %}
-            <div class="col-12">
-                <p class="text-center">등록된 이미지와 설명이 없습니다.</p>
-            </div>
-        {% endfor %}
-        <div style="display: flex; justify-content: flex-end; align-items: center; margin-bottom: 1rem; margin-right: 1.5rem;">
-            <p class="text-sm text-gray-600 dark:text-gray-400" style="font-size:0.8rem; color:gray; margin: 0; margin-right: 1.5rem;">
-                {{ special_pilgrim.created_at|format_date }}
-            </p>
-            <a href="{% url 'wayapp:splist' %}" style="text-decoration-line: none; display: flex; align-items: center;">
-                👀
-            </a>
-        </div>
-    </div>
-
-
-    <!------------------------------------------------------------------------------------>
-    <!------------------------------------------------------------------------------------>
     <style>
-
         .container {
             display: flex; /* 자식 요소들을 수평으로 배치 */
             justify-content: center; /* 자식 요소들 사이의 공간을 고르게 분배 */
@@ -130,6 +67,68 @@
 
     </style>
 
+
+    <!-- ------------------------------ Content ------------------------------------- -->
+    <div class="container">
+        <div class="left-box">
+            <div class="profile-header">
+                {% if special_pilgrim.author.profile %}
+                    <img src="{{ special_pilgrim.author.profile.image.url }}" alt="{{ special_pilgrim.author.profile.nickname }}">
+                    <h7 style="color: black;">{{ special_pilgrim.author.profile.nickname }}</h7>
+                {% else %}
+                    <h7 style="color: black;">{{ special_pilgrim.author.profile.nickname }}</h7>
+                {% endif %}
+            </div>
+        </div>
+        <div class="right-box">
+            {% if special_pilgrim.author == user %}
+                <div>
+                    <button style="border: none; outline: none; background: transparent; cursor:pointer;" onclick="toggleActions()">
+                        &#65049
+                    </button>
+                    <!-- Update and Delete buttons, initially hidden -->
+                    <div id="popup-actions" class="popup-actions" style="display: none;">
+                        <a href="{% url 'wayapp:spupdate' pk=special_pilgrim.pk %}" class = "btn btn-success rounded-pill btn-sm col-22">Update</a>
+                        <a href="{% url 'wayapp:spdelete' pk=special_pilgrim.pk %}" class = "btn btn-danger rounded-pill btn-sm col-22" onclick="return confirmDelete();">Delete</a>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+        <!-- 팝업 오버레이 (클릭 시 닫기 가능) -->
+        <div id="overlay" class="overlay" style="display: none;" onclick="closePopup()"></div>
+    </div>
+
+    <a href="{% url 'wayapp:splist' %}" style="text-decoration-line: none;">
+        <p style="font-family: NanumDdoBagDdoBag; font-weight: bold; font-size: 2rem; color: black;">{{ special_pilgrim.group }} 순례 기록</p>
+    </a>
+    <div>
+        {% for image, description in image_description_pairs %}
+            <div style="margin-bottom: 2rem;">
+                <div class="word-wrap" style="margin: 0.5rem 0.7rem auto 0.7rem; text-align: left;"> <!--margin up, right, down, left-->
+                    <p class="card-text">
+                        {{ description.text|linebreaks }}
+                    </p>
+                </div>
+                <img src="{{ image.image.url }}" alt="이미지" class="card-img-top" style="border-radius: 10px;">
+                <br>
+            </div>
+        {% empty %}
+            <div class="col-12">
+                <p class="text-center">등록된 이미지와 설명이 없습니다.</p>
+            </div>
+        {% endfor %}
+        <div style="display: flex; justify-content: flex-end; align-items: center; margin-bottom: 1rem; margin-right: 1.5rem;">
+            <p class="text-sm text-gray-600 dark:text-gray-400" style="font-size:0.8rem; color:gray; margin: 0; margin-right: 1.5rem;">
+                {{ special_pilgrim.created_at|format_date }}
+            </p>
+            <a href="{% url 'wayapp:splist' %}" style="text-decoration-line: none; display: flex; align-items: center;">
+                👀
+            </a>
+        </div>
+    </div>
+
+
+    <!-- ------------------------------ Script ------------------------------------- -->
     <script>
         ////////////////// Toggle visibility of update and delete buttons //////////////
         function toggleActions() {

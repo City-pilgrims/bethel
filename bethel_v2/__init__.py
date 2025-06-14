@@ -4,8 +4,15 @@ import pymysql
 from django.contrib.auth import get_user_model
 from django.db.utils import OperationalError, ProgrammingError
 
-# ✅ pymysql을 MySQLdb처럼 사용하게 설정
 pymysql.install_as_MySQLdb()
+
+
+def get_password_from_secret():
+    file_path = os.environ.get("DJANGO_SUPERUSER_PASSWORD_FILE")
+    if file_path and os.path.exists(file_path):
+        with open(file_path) as f:
+            return f.read().strip()
+    return os.environ.get("DJANGO_SUPERUSER_PASSWORD", "admin1234")
 
 
 def create_superuser_if_needed():
@@ -13,13 +20,12 @@ def create_superuser_if_needed():
         return
 
     try:
-        # Django ORM 사용 전 초기화
         django.setup()
-
         User = get_user_model()
-        username = os.environ.get("DJANGO_SUPERUSER_NAME", "admin")
+
+        username = os.environ.get("DJANGO_SUPERUSER_NAME", "wlqtk")
         email = os.environ.get("DJANGO_SUPERUSER_EMAIL", "admin@example.com")
-        password = os.environ.get("DJANGO_SUPERUSER_PASSWORD", "admin1234")
+        password = get_password_from_secret()
 
         if User.objects.filter(username=username).exists():
             print(f"🟢 슈퍼유저 '{username}' 이미 존재함.")

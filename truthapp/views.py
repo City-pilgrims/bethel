@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import render, get_object_or_404, redirect
@@ -17,6 +18,15 @@ class RecitingCreateView(CreateView):
     form_class = RecitingBoardForm
     template_name = 'truthapp/create.html'
     success_url = reverse_lazy('truthapp:list')
+
+    def dispatch(self, request, *args, **kwargs):
+        if not (
+                request.user.groups.filter(name="Toledot").exists() or
+                request.user.groups.filter(name="Commander").exists()
+        ):
+            messages.error(request, "순례자들교회 등록 지체들만 작성가능합니다.")
+            return redirect("truthapp:list")
+        return super().dispatch(request, *args, **kwargs)
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()

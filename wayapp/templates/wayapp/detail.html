@@ -4,7 +4,129 @@
 {% load custom_filters %}
 
 {% block content %}
+    <style>
+        .carousel-item {
+            transition: transform 0.2s ease-in-out !important;
+        }
 
+        .carousel-item img {
+            image-orientation: from-image;
+
+        }
+
+        /* 인디케이터 버튼 원형 스타일 */
+        .carousel-indicators button {
+            width: 1px;
+            height: 3px;
+            border-radius: 50%;  /* 원형으로 만들기 */
+            background-color: #000;
+            border: none;
+            opacity: 0.2;
+            transition: opacity 0.3s ease;
+            margin: 0 2px;
+        }
+
+        /* 활성화된 인디케이터 버튼 스타일 */
+        .carousel-indicators .active {
+            background-color: #007bff;
+            opacity: 1;
+        }
+
+        /* 마우스 오버 시 버튼의 배경색 변경 */
+        .carousel-indicators button:hover {
+            background-color: #0056b3;
+        }
+
+        .container {
+            display: flex; /* 자식 요소들을 수평으로 배치 */
+            justify-content: center; /* 자식 요소들 사이의 공간을 고르게 분배 */
+        }
+
+        .left-box {
+            width: 50%; /* 왼쪽 구역의 너비 */
+            padding: 5px;
+            text-align: left;
+        }
+
+        .right-box {
+            display: flex;
+            width: 50%; /* 오른쪽 구역의 너비 */
+            /*padding: 5px;*/
+            text-align: right;
+            justify-content: flex-end; /* 아래 정렬 */
+            align-items: center; /* 요소가운데 정렬 */
+        }
+
+         /* 팝업 버튼 스타일1 */
+        .popup-actions {
+            display: none; /* 초기에는 숨겨놓음 */
+            position: absolute;
+            padding: 10px;
+            z-index: 990; /* 팝업이 다른 콘텐츠 위에 표시되도록 */
+            /*border: 1px solid #ccc;
+            background-color: #fff;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);*/
+
+            top: 18%;
+            left: 68%;
+        }
+
+        .popup-actions a {
+            display: block;
+            margin: 10px 0;
+            padding: 10px 20px;
+            text-decoration: none;
+            color: white;
+        }
+
+        /* 오버레이 스타일 */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 40%;
+            background-color: rgba(0, 0, 0, 0.5); /* 반투명 검은색 */
+            z-index: 980; /* 팝업 뒤로 숨겨짐 */
+            display: none;
+        }
+
+        .word-wrap {
+            white-space: normal;       /* 줄 바꿈을 유지하되 단어가 길어지면 줄 바꿈 */
+            word-wrap: break-word;       /* 긴 단어가 줄을 넘지 않도록 강제로 줄 바꿈 */
+            word-break: keep-all;       /* 단어가 너무 길면 중간에서 강제로 줄 바꿈 */
+        }
+
+        .comment-list {
+            overflow-y: auto;  /* 스크롤 가능 */
+        }
+
+        .modal-dialog {
+            max-height: 80%; /* 모달 높이 제한 */
+            height: 80%; /* 전체 화면 높이의 80%로 설정 */
+            overflow-y: auto; /* 내용이 넘치면 스크롤을 추가 */
+        }
+
+        .modal-content {
+            height: 100%; /* modal-dialog 안에서의 높이를 100%로 설정 */
+        }
+
+        .modal-body {
+            height: calc(100% - 100px); /* 모달 본문이 100px의 헤더를 제외한 공간을 차지하도록 설정 */
+            overflow-y: auto; /* 내용이 길어질 경우 스크롤 */
+        }
+        /*
+        .fixed-comment-footer {
+            position: sticky;
+            bottom: 0;
+            background-color: white;
+            padding: 5px 10px;
+            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+        }*/
+    </style>
+
+
+    <!-- ------------------------------ Content ------------------------------------- -->
     <div class="container">
         <div class="left-box">
             <div class="profile-header">
@@ -131,127 +253,7 @@
     </div>
 
 
-    <style>
-        .carousel-item {
-            transition: transform 0.2s ease-in-out !important;
-        }
-
-        .carousel-item img {
-            image-orientation: from-image;
-
-        }
-
-        /* 인디케이터 버튼 원형 스타일 */
-        .carousel-indicators button {
-            width: 1px;
-            height: 3px;
-            border-radius: 50%;  /* 원형으로 만들기 */
-            background-color: #000;
-            border: none;
-            opacity: 0.2;
-            transition: opacity 0.3s ease;
-            margin: 0 2px;
-        }
-
-        /* 활성화된 인디케이터 버튼 스타일 */
-        .carousel-indicators .active {
-            background-color: #007bff;
-            opacity: 1;
-        }
-
-        /* 마우스 오버 시 버튼의 배경색 변경 */
-        .carousel-indicators button:hover {
-            background-color: #0056b3;
-        }
-
-        .container {
-            display: flex; /* 자식 요소들을 수평으로 배치 */
-            justify-content: center; /* 자식 요소들 사이의 공간을 고르게 분배 */
-        }
-
-        .left-box {
-            width: 50%; /* 왼쪽 구역의 너비 */
-            padding: 5px;
-            text-align: left;
-        }
-
-        .right-box {
-            display: flex;
-            width: 50%; /* 오른쪽 구역의 너비 */
-            /*padding: 5px;*/
-            text-align: right;
-            justify-content: flex-end; /* 아래 정렬 */
-            align-items: center; /* 요소가운데 정렬 */
-        }
-
-         /* 팝업 버튼 스타일1 */
-        .popup-actions {
-            display: none; /* 초기에는 숨겨놓음 */
-            position: absolute;
-            padding: 10px;
-            z-index: 990; /* 팝업이 다른 콘텐츠 위에 표시되도록 */
-            /*border: 1px solid #ccc;
-            background-color: #fff;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);*/
-
-            top: 18%;
-            left: 68%;
-        }
-
-        .popup-actions a {
-            display: block;
-            margin: 10px 0;
-            padding: 10px 20px;
-            text-decoration: none;
-            color: white;
-        }
-
-        /* 오버레이 스타일 */
-        .overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 40%;
-            background-color: rgba(0, 0, 0, 0.5); /* 반투명 검은색 */
-            z-index: 980; /* 팝업 뒤로 숨겨짐 */
-            display: none;
-        }
-
-        .word-wrap {
-            white-space: normal;       /* 줄 바꿈을 유지하되 단어가 길어지면 줄 바꿈 */
-            word-wrap: break-word;       /* 긴 단어가 줄을 넘지 않도록 강제로 줄 바꿈 */
-            word-break: keep-all;       /* 단어가 너무 길면 중간에서 강제로 줄 바꿈 */
-        }
-
-        .comment-list {
-            overflow-y: auto;  /* 스크롤 가능 */
-        }
-
-        .modal-dialog {
-            max-height: 80%; /* 모달 높이 제한 */
-            height: 80%; /* 전체 화면 높이의 80%로 설정 */
-            overflow-y: auto; /* 내용이 넘치면 스크롤을 추가 */
-        }
-
-        .modal-content {
-            height: 100%; /* modal-dialog 안에서의 높이를 100%로 설정 */
-        }
-
-        .modal-body {
-            height: calc(100% - 100px); /* 모달 본문이 100px의 헤더를 제외한 공간을 차지하도록 설정 */
-            overflow-y: auto; /* 내용이 길어질 경우 스크롤 */
-        }
-        /*
-        .fixed-comment-footer {
-            position: sticky;
-            bottom: 0;
-            background-color: white;
-            padding: 5px 10px;
-            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
-        }*/
-    </style>
-
+    <!-- ------------------------------ Script ------------------------------------- -->
     <script>
         //////////////////터치 및 스와이프로 캐러셀 제어하는 스크립트////////////////////
         document.addEventListener("DOMContentLoaded", function () {

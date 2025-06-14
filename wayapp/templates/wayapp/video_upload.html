@@ -3,7 +3,20 @@
 {% load static %}
 
 {% block content %}
+    <style>
+        .center-input {
+            margin: 0 auto;  /* 입력 칸을 가운데 정렬 */
+        }
 
+        .custom-label {
+            font-family: NanumDdoBagDdoBag;
+            font-size: 1.8rem;
+            font-weight: bold;
+        }
+    </style>
+
+
+    <!-- ------------------------------ Content ------------------------------------- -->
      <form method="post" enctype="multipart/form-data" style="text-align: center;">
         {% csrf_token %}
 
@@ -36,6 +49,8 @@
 
     </form>
 
+
+    <!-- ------------------------------ Script ------------------------------------- -->
     <script>
         document.getElementById('{{ form.video.id_for_label }}').addEventListener('change', function(event) {
             const videoPreview = document.getElementById('videoPreview');
@@ -53,16 +68,6 @@
         });
     </script>
 
-    <style>
-        .center-input {
-            margin: 0 auto;  /* 입력 칸을 가운데 정렬 */
-        }
 
-        .custom-label {
-            font-family: NanumDdoBagDdoBag;
-            font-size: 1.8rem;
-            font-weight: bold;
-        }
-    </style>
 
 {% endblock %}

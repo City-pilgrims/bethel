@@ -3,7 +3,77 @@
 {% load static %}
 
 {% block content %}
+    <style>
+        /* 미리보기 스타일 */
+        .preview-container {
+            display: flex;
+            justify-content: center; /* 가운데 정렬 */
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
 
+        .preview-item {
+            text-align: center;
+        }
+
+        .preview-item img {
+            width: 80%;
+            max-width: 400px;
+            height: auto;
+            display: block;
+            margin: 0 auto; /* 가운데 정렬 */
+        }
+
+        .uploadItem { margin-bottom: 30px; }
+
+        /* 업로드 입력창 스타일 */
+        .uploadItem {
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .uploadItem input[type="file"] {
+            display: block;
+            margin: 10px auto;
+        }
+
+        .uploadItem textarea[type="text"] {
+
+            margin: 10px auto; /* 설명 입력창도 중앙 정렬 */
+            padding: 8px;
+            width: 80%;
+            height: 80px;
+            max-width: 400px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            resize: vertical;
+        }
+        .description-input {
+            width: 80%;  /* 너비를 100%로 설정 */
+            height: 80px;  /* 기본 높이 설정 */
+            padding: 8px;  /* 내부 여백 */
+            max-width: 400px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            resize: vertical;
+        }
+
+        .uploadItem input[type="text_group"] {
+            display: block;
+            margin: 10px auto; /* 설명 입력창도 중앙 정렬 */
+            padding: 8px;
+            width: 80%;
+            height: 40px;
+            max-width: 400px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+    </style>
+
+
+    <!-- ------------------------------ Content ------------------------------------- -->
     <div style="text-align: center; margin-bottom: 1.2rem;">
         <p style="font-family: NanumDdoBagDdoBag; font-weight: bold; font-size:1.8rem;">🌏 특별 순례 기록</p>
     </div>
@@ -54,8 +124,7 @@
     </form>
 
 
-    <!------------------------------------------------------------------------------------>
-    <!------------------------------------------------------------------------------------>
+    <!-- ------------------------------- Script ------------------------------------ -->
     <script>
         function getCSRFToken() {
             return document.querySelector('input[name="csrfmiddlewaretoken"]').value;
@@ -151,75 +220,5 @@
             }
         }
     </script>
-
-    <style>
-        /* 미리보기 스타일 */
-        .preview-container {
-            display: flex;
-            justify-content: center; /* 가운데 정렬 */
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-top: 10px;
-        }
-
-        .preview-item {
-            text-align: center;
-        }
-
-        .preview-item img {
-            width: 80%;
-            max-width: 400px;
-            height: auto;
-            display: block;
-            margin: 0 auto; /* 가운데 정렬 */
-        }
-
-        .uploadItem { margin-bottom: 30px; }
-
-        /* 업로드 입력창 스타일 */
-        .uploadItem {
-            margin-bottom: 30px;
-            text-align: center;
-        }
-
-        .uploadItem input[type="file"] {
-            display: block;
-            margin: 10px auto;
-        }
-
-        .uploadItem textarea[type="text"] {
-
-            margin: 10px auto; /* 설명 입력창도 중앙 정렬 */
-            padding: 8px;
-            width: 80%;
-            height: 80px;
-            max-width: 400px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            resize: vertical;
-        }
-        .description-input {
-            width: 80%;  /* 너비를 100%로 설정 */
-            height: 80px;  /* 기본 높이 설정 */
-            padding: 8px;  /* 내부 여백 */
-            max-width: 400px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            resize: vertical;
-        }
-
-        .uploadItem input[type="text_group"] {
-            display: block;
-            margin: 10px auto; /* 설명 입력창도 중앙 정렬 */
-            padding: 8px;
-            width: 80%;
-            height: 40px;
-            max-width: 400px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-    </style>
-
 
 {% endblock %}

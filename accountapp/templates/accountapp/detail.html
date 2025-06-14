@@ -88,8 +88,8 @@
         }
     </style>
 
-    <div>
 
+    <div>
         {% if target_user.profile %}
             <img src="{{ target_user.profile.image.url }}" alt=""
             style="height: 12rem; width: 12rem; border-radius: 20rem; margin-bottom: 2rem; ">
@@ -107,8 +107,6 @@
                     {{ target_user.profile.message|linebreaksbr }}
                 </p>
             </div>
-
-
 
         {% else %}
             {% if target_user == user %}

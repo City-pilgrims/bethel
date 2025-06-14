@@ -1,11 +1,10 @@
 {% extends 'base_way.html' %}
 {% load bootstrap4 %}
 {% load static %}
+{% load group_tags %}
 
 {% block content %}
-
     <style>
-
         .page-header {
             position: fixed;
             top: 110px;
@@ -126,18 +125,18 @@
         }
     </style>
 
+
+    <!-- ------------------------------ Content ------------------------------------- -->
     <!-- 고정된 페이지 헤더 -->
     <div class="page-header">
         <p class="header-title">순례 영상 (Pilgrimage Videos)</p>
         <div class="header-button-area">
             {% if user.is_authenticated %}
-                {% for group in request.user.groups.all %}
-                    {% if group.name == "Toledot" %}
-                        <a href="{% url 'wayapp:pilvideoupload' %}" class="btn-header-create">
-                            🌟️&nbsp기록
-                        </a>
-                    {% endif %}
-                {% endfor %}
+                {% if request.user|in_groups:"Toledot,Commander" %}
+                    <a href="{% url 'wayapp:pilvideoupload' %}" class="btn-header-create">
+                        🌟️&nbsp기록
+                    </a>
+                {% endif %}
             {% endif %}
         </div>
     </div>

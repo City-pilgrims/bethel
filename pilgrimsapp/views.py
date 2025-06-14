@@ -256,6 +256,13 @@ def answer_create(request, pk):
     """답변 작성"""
     question = get_object_or_404(Question, pk=pk)
 
+    # ✅ 그룹 확인: 'Toledot'에 속한 사용자만 가능
+    aa = request.user.groups.name
+    print(aa)
+    if not request.user.groups.filter(name='Commander').exists():
+        messages.error(request, 'Toledot 그룹에 속한 사용자만 답변을 작성할 수 있습니다.')
+        return redirect('pilgrimsapp:detail', pk=pk)
+
     if request.method == 'POST':
         form = AnswerForm(request.POST)
         if form.is_valid():

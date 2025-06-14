@@ -3,149 +3,151 @@
 {% load widget_tweaks %}
 
 {% block content %}
-<style>
-
-    .form-group label {
-        text-align: left;
-        display: block;
-        font-weight: 600;
-        font-size: 0.85rem;
-        margin-bottom: 0.3rem;
-        margin-left: 1rem;
-    }
-
-    .meditation-row {
-        display: flex;
-        gap: 10px;
-        flex-wrap: wrap;
-        justify-content: space-between;
-        margin-top: 1.5rem;
-
-    }
-
-    .meditation-item {
-        flex: 1 1 30%;
-        min-width: 100px;
-        text-align: left;
-    }
-
-    .meditation-item label {
-        display: block;
-        font-weight: 600;
-        font-size: 0.85rem;
-        margin-bottom: 0.3rem;
-        margin-left: 1rem;
-    }
-
-    input[type="file"] {
-        font-size: 0.85rem;
-        width: 100%;
-    }
-
-    .file-name-display {
-        font-size: 0.75rem;
-        color: #6c757d;
-        margin-top: 0.3rem;
-        overflow: hidden;
-    }
-
-    @media (max-width: 576px) {
-        .meditation-row {
-            flex-direction: column;
+    <style>
+        .form-group label {
+            text-align: left;
+            display: block;
+            font-weight: 600;
+            font-size: 0.85rem;
+            margin-bottom: 0.3rem;
+            margin-left: 1rem;
         }
-    }
-</style>
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const fileInputs = document.querySelectorAll('.file-input');
 
-        fileInputs.forEach(function(input) {
-            const display = input.parentElement.querySelectorAll('.file-name-display')[1]; // 두 번째 div 선택
+        .meditation-row {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            margin-top: 1.5rem;
 
-            if (display) {
-                input.addEventListener('change', function () {
-                    if (input.files.length > 0) {
-                        display.textContent = "선택한 파일: " + input.files[0].name;
-                    } else {
-                        display.textContent = "";
-                    }
-                });
+        }
+
+        .meditation-item {
+            flex: 1 1 30%;
+            min-width: 100px;
+            text-align: left;
+        }
+
+        .meditation-item label {
+            display: block;
+            font-weight: 600;
+            font-size: 0.85rem;
+            margin-bottom: 0.3rem;
+            margin-left: 1rem;
+        }
+
+        input[type="file"] {
+            font-size: 0.85rem;
+            width: 100%;
+        }
+
+        .file-name-display {
+            font-size: 0.75rem;
+            color: #6c757d;
+            margin-top: 0.3rem;
+            overflow: hidden;
+        }
+
+        @media (max-width: 576px) {
+            .meditation-row {
+                flex-direction: column;
             }
-        });
-    });
-</script>
+        }
+    </style>
 
-<div class="container mb-5" style="max-width: 500px;">
-    <div class="text-center mb-4">
-        <h4>👤 사용자 프로필 수정</h4>
+
+    <!-- ------------------------------ Content ------------------------------------- -->
+    <div class="container mb-5" style="max-width: 500px;">
+        <div class="text-center mb-4">
+            <h4>👤 사용자 프로필 수정</h4>
+        </div>
+
+        <form action="{% url 'profileapp:update' pk=target_profile.pk %}" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <!-- 이미지 -->
+            <div class="form-group mb-3">
+                <label for="{{ form.image.id_for_label }}">
+                    🖼 {{ form.image.label }}
+                    <span style="font-size: 0.6rem; color: gray;"> (현재 이미지: {{ target_profile.image.name|cut:'profile/' }})</span>
+                </label>
+                {{ form.image|add_class:"form-control" }}
+            </div>
+
+            <!-- 닉네임 -->
+            <div class="form-group mb-3">
+                <label for="{{ form.nickname.id_for_label }}">☺︎ {{ form.nickname.label }}</label>
+                {{ form.nickname|add_class:"form-control" }}
+            </div>
+
+            <!-- 메시지 -->
+            <div class="form-group mb-4">
+                <label for="{{ form.message.id_for_label }}">💬 {{ form.message.label }}</label>
+                {{ form.message|add_class:"form-control" }}
+            </div>
+
+            <!-- 묵상 파일 3종 -->
+            <div class="meditation-row">
+                <div class="meditation-item">
+                    <label for="{{ form.image_medfirst.id_for_label }}">
+                        🌅 {{ form.image_medfirst.label }}
+                        <span style="font-size: 0.6rem; color: gray;"> (현재 이미지: {{ target_profile.image_medfirst.name|cut:'profile_img_med/' }})</span>
+                    </label>
+                    {{ form.image_medfirst|add_class:"form-control" }}
+                    <div class="file-name-display text-muted"></div>
+                </div>
+                <div class="meditation-item">
+                    <label for="{{ form.image_medsecond.id_for_label }}">
+                        🌄 {{ form.image_medsecond.label }}
+                        <span style="font-size: 0.6rem; color: gray;"> (현재 이미지: {{ target_profile.image_medsecond.name|cut:'profile_img_med/' }})</span>
+                    </label>
+                    {{ form.image_medsecond|add_class:"form-control" }}
+                    <div class="file-name-display text-muted"></div>
+                </div>
+                <div class="meditation-item">
+                    <label for="{{ form.video_medthird.id_for_label }}">
+                        🎥 {{ form.video_medthird.label }}
+                        <span style="font-size: 0.6rem; color: gray;"> (현재 이미지: {{ target_profile.video_medthird.name|cut:'profile_video_med/' }})</span>
+                    </label>
+                    {{ form.video_medthird|add_class:"form-control" }}
+                    <div class="file-name-display text-muted"></div>
+                </div>
+            </div>
+
+           <!-- 버튼 -->
+           <div class="container mt-4">
+                <div class="d-flex justify-content-between" style="margin: 0 1rem;">
+                    <a href="{% url 'accountapp:detail' pk=user.pk %}" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left me-1"></i>등록 취소
+                    </a>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save me-1"></i>프로필 등록
+                    </button>
+                </div>
+            </div>
+        </form>
     </div>
 
-    <form action="{% url 'profileapp:update' pk=target_profile.pk %}" method="post" enctype="multipart/form-data">
-        {% csrf_token %}
 
-        <!-- 이미지 -->
-        <div class="form-group mb-3">
-            <label for="{{ form.image.id_for_label }}">
-                🖼 {{ form.image.label }}
-                <span style="font-size: 0.6rem; color: gray;"> (현재 이미지: {{ target_profile.image.name|cut:'profile/' }})</span>
-            </label>
-            {{ form.image|add_class:"form-control" }}
-        </div>
+    <!-- ------------------------------ Script ------------------------------------- -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const fileInputs = document.querySelectorAll('.file-input');
 
-        <!-- 닉네임 -->
-        <div class="form-group mb-3">
-            <label for="{{ form.nickname.id_for_label }}">☺︎ {{ form.nickname.label }}</label>
-            {{ form.nickname|add_class:"form-control" }}
-        </div>
+            fileInputs.forEach(function(input) {
+                const display = input.parentElement.querySelectorAll('.file-name-display')[1]; // 두 번째 div 선택
 
-        <!-- 메시지 -->
-        <div class="form-group mb-4">
-            <label for="{{ form.message.id_for_label }}">💬 {{ form.message.label }}</label>
-            {{ form.message|add_class:"form-control" }}
-        </div>
-
-        <!-- 묵상 파일 3종 -->
-        <div class="meditation-row">
-            <div class="meditation-item">
-                <label for="{{ form.image_medfirst.id_for_label }}">
-                    🌅 {{ form.image_medfirst.label }}
-                    <span style="font-size: 0.6rem; color: gray;"> (현재 이미지: {{ target_profile.image_medfirst.name|cut:'profile_img_med/' }})</span>
-                </label>
-                {{ form.image_medfirst|add_class:"form-control" }}
-                <div class="file-name-display text-muted"></div>
-            </div>
-            <div class="meditation-item">
-                <label for="{{ form.image_medsecond.id_for_label }}">
-                    🌄 {{ form.image_medsecond.label }}
-                    <span style="font-size: 0.6rem; color: gray;"> (현재 이미지: {{ target_profile.image_medsecond.name|cut:'profile_img_med/' }})</span>
-                </label>
-                {{ form.image_medsecond|add_class:"form-control" }}
-                <div class="file-name-display text-muted"></div>
-            </div>
-            <div class="meditation-item">
-                <label for="{{ form.video_medthird.id_for_label }}">
-                    🎥 {{ form.video_medthird.label }}
-                    <span style="font-size: 0.6rem; color: gray;"> (현재 이미지: {{ target_profile.video_medthird.name|cut:'profile_video_med/' }})</span>
-                </label>
-                {{ form.video_medthird|add_class:"form-control" }}
-                <div class="file-name-display text-muted"></div>
-            </div>
-        </div>
-
-       <!-- 버튼 -->
-       <div class="container mt-4">
-            <div class="d-flex justify-content-between" style="margin: 0 1rem;">
-                <a href="{% url 'accountapp:detail' pk=user.pk %}" class="btn btn-secondary">
-                    <i class="fas fa-arrow-left me-1"></i>등록 취소
-                </a>
-                <button type="submit" class="btn btn-primary">
-                    <i class="fas fa-save me-1"></i>프로필 등록
-                </button>
-            </div>
-        </div>
-    </form>
-</div>
-
-
+                if (display) {
+                    input.addEventListener('change', function () {
+                        if (input.files.length > 0) {
+                            display.textContent = "선택한 파일: " + input.files[0].name;
+                        } else {
+                            display.textContent = "";
+                        }
+                    });
+                }
+            });
+        });
+    </script>
 
 {% endblock %}

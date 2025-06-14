@@ -2,126 +2,129 @@
 {% load static %}
 
 {% block content %}
-<div class="container mt-4">
-    <!-- 질문 상세 -->
-    <div class="card mb-4">
-        <div class="card-header d-flex justify-content-between align-items-center">
-            <div>
-                <span class="badge bg-secondary me-2">{{ question.get_category_display }}</span>
-                {% if question.is_secret %}
-                    <span class="badge bg-warning">
-                        <i class="fas fa-lock me-1"></i>비밀글
-                    </span>
-                {% endif %}
-                {% if question.is_answered %}
-                    <span class="badge bg-success">답변완료</span>
-                {% else %}
-                    <span class="badge bg-warning">답변대기</span>
-                {% endif %}
-            </div>
-            <div>
-                {% if user == question.author %}
-                    <a href="{% url 'pilgrimsapp:update' question.pk %}" class="btn btn-sm btn-outline-primary">수정</a>
-                    <a href="{% url 'pilgrimsapp:delete' question.pk %}" class="btn btn-sm btn-outline-danger">삭제</a>
-                {% endif %}
-            </div>
-        </div>
-        <div class="card-body">
-            <h4 class="card-title">{{ question.title }}</h4>
-            <div class="text-muted mb-3">
+    <!-- There is no style in this html. -->
 
-                {% if question.author.profile %}
-                    <img src="{{ question.author.profile.image.url }}"
-                         alt="{{ question.author.profile.nickname }}" style="height: 20px; width: 20px; border-radius: 8px;">
-                    <small>
-                        <!--<i class="fas fa-user me-1"></i>{{ question.author.username }}-->
-                        <i class="fas fa-calendar ms-3 me-1"></i>{{ question.created_at|date:"Y-m-d H:i" }}
-                        <i class="fas fa-eye ms-3 me-1"></i>{{ question.views }}
-                    </small>
-                {% else %}
-                    <small>
-                        {{ question.author.username }}
-                        <i class="fas fa-calendar ms-3 me-1"></i>{{ question.created_at|date:"Y-m-d H:i" }}
-                        <i class="fas fa-eye ms-3 me-1"></i>{{ question.views }}
-                    </small>
-                {% endif %}
-            </div>
-            <div class="card-text">
-                {{ question.content|linebreaks }}
-            </div>
-        </div>
-    </div>
-
-    <!-- 답변 목록 -->
-    <div class="card mb-4">
-        <div class="card-header">
-            <h5 class="mb-0">
-                <i class="fas fa-comments me-2"></i>답변 ({{ question.answers.count }}개)
-            </h5>
-        </div>
-        <div class="card-body">
-            {% for answer in question.answers.all %}
-                <div class="border-bottom pb-3 mb-3 {% if not forloop.last %}{% endif %}">
-                    <div class="d-flex justify-content-between align-items-start mb-2">
-                        <div>
-                            <strong>{{ answer.author.username }}</strong>
-                            {% if answer.is_official %}
-                                <span class="badge bg-primary ms-2">공식답변</span>
-                            {% endif %}
-                            <small class="text-muted ms-2">{{ answer.created_at|date:"Y-m-d H:i" }}</small>
-                            {% if answer.updated_at != answer.created_at %}
-                                <small class="text-muted">(수정됨)</small>
-                            {% endif %}
-                        </div>
-                        {% if user == answer.author %}
-                            <div>
-                                <a href="{% url 'pilgrimsapp:answer_update' question.pk answer.pk %}"
-                                   class="btn btn-sm btn-outline-secondary">수정</a>
-                                <a href="{% url 'pilgrimsapp:answer_delete' question.pk answer.pk %}"
-                                   class="btn btn-sm btn-outline-danger">삭제</a>
-                            </div>
-                        {% endif %}
-                    </div>
-                    <div>{{ answer.content|linebreaks }}</div>
+    <!-- ------------------------------ Content ------------------------------------- -->
+    <div class="container mt-4">
+        <!-- 질문 상세 -->
+        <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <div>
+                    <span class="badge bg-secondary me-2">{{ question.get_category_display }}</span>
+                    {% if question.is_secret %}
+                        <span class="badge bg-warning">
+                            <i class="fas fa-lock me-1"></i>비밀글
+                        </span>
+                    {% endif %}
+                    {% if question.is_answered %}
+                        <span class="badge bg-success">답변완료</span>
+                    {% else %}
+                        <span class="badge bg-warning">답변대기</span>
+                    {% endif %}
                 </div>
-            {% empty %}
-                <p class="text-muted text-center py-4">아직 답변이 없습니다.</p>
-            {% endfor %}
-        </div>
-    </div>
+                <div>
+                    {% if user == question.author %}
+                        <a href="{% url 'pilgrimsapp:update' question.pk %}" class="btn btn-sm btn-outline-primary">수정</a>
+                        <a href="{% url 'pilgrimsapp:delete' question.pk %}" class="btn btn-sm btn-outline-danger">삭제</a>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="card-body">
+                <h4 class="card-title">{{ question.title }}</h4>
+                <div class="text-muted mb-3">
 
-    <!-- 답변 작성 -->
-    {% if user.is_authenticated %}
+                    {% if question.author.profile %}
+                        <img src="{{ question.author.profile.image.url }}"
+                             alt="{{ question.author.profile.nickname }}" style="height: 20px; width: 20px; border-radius: 8px;">
+                        <small>
+                            <!--<i class="fas fa-user me-1"></i>{{ question.author.username }}-->
+                            <i class="fas fa-calendar ms-3 me-1"></i>{{ question.created_at|date:"Y-m-d H:i" }}
+                            <i class="fas fa-eye ms-3 me-1"></i>{{ question.views }}
+                        </small>
+                    {% else %}
+                        <small>
+                            {{ question.author.username }}
+                            <i class="fas fa-calendar ms-3 me-1"></i>{{ question.created_at|date:"Y-m-d H:i" }}
+                            <i class="fas fa-eye ms-3 me-1"></i>{{ question.views }}
+                        </small>
+                    {% endif %}
+                </div>
+                <div class="card-text">
+                    {{ question.content|linebreaks }}
+                </div>
+            </div>
+        </div>
+
+        <!-- 답변 목록 -->
         <div class="card mb-4">
             <div class="card-header">
                 <h5 class="mb-0">
-                    <i class="fas fa-edit me-2"></i>답변 작성
+                    <i class="fas fa-comments me-2"></i>답변 ({{ question.answers.count }}개)
                 </h5>
             </div>
             <div class="card-body">
-                <form method="post" action="{% url 'pilgrimsapp:answer_create' question.pk %}">
-                    {% csrf_token %}
-                    <div class="mb-3">
-                        {{ answer_form.content }}
+                {% for answer in question.answers.all %}
+                    <div class="border-bottom pb-3 mb-3 {% if not forloop.last %}{% endif %}">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <div>
+                                <strong>{{ answer.author.username }}</strong>
+                                {% if answer.is_official %}
+                                    <span class="badge bg-primary ms-2">공식답변</span>
+                                {% endif %}
+                                <small class="text-muted ms-2">{{ answer.created_at|date:"Y-m-d H:i" }}</small>
+                                {% if answer.updated_at != answer.created_at %}
+                                    <small class="text-muted">(수정됨)</small>
+                                {% endif %}
+                            </div>
+                            {% if user == answer.author %}
+                                <div>
+                                    <a href="{% url 'pilgrimsapp:answer_update' question.pk answer.pk %}"
+                                       class="btn btn-sm btn-outline-secondary">수정</a>
+                                    <a href="{% url 'pilgrimsapp:answer_delete' question.pk answer.pk %}"
+                                       class="btn btn-sm btn-outline-danger">삭제</a>
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div>{{ answer.content|linebreaks }}</div>
                     </div>
-                    <button type="submit" class="btn btn-primary">답변 등록</button>
-                </form>
+                {% empty %}
+                    <p class="text-muted text-center py-4">아직 답변이 없습니다.</p>
+                {% endfor %}
             </div>
         </div>
-    {% else %}
-        <div class="alert alert-info text-center">
-            답변을 작성하려면 <a href="{% url 'accountapp:login' %}">로그인</a>이 필요합니다.
+
+        <!-- 답변 작성 -->
+        {% if user.is_authenticated %}
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-edit me-2"></i>답변 작성
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <form method="post" action="{% url 'pilgrimsapp:answer_create' question.pk %}">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            {{ answer_form.content }}
+                        </div>
+                        <button type="submit" class="btn btn-primary">답변 등록</button>
+                    </form>
+                </div>
+            </div>
+        {% else %}
+            <div class="alert alert-info text-center">
+                답변을 작성하려면 <a href="{% url 'accountapp:login' %}">로그인</a>이 필요합니다.
+            </div>
+        {% endif %}
+
+        <!-- 목록으로 돌아가기 -->
+        <div class="text-center">
+            <a href="{% url 'pilgrimsapp:list' %}" class="btn btn-secondary">
+                <i class="fas fa-list me-1"></i>목록
+            </a>
         </div>
-    {% endif %}
-
-    <!-- 목록으로 돌아가기 -->
-    <div class="text-center">
-        <a href="{% url 'pilgrimsapp:list' %}" class="btn btn-secondary">
-            <i class="fas fa-list me-1"></i>목록
-        </a>
     </div>
-</div>
 
-<!-- Font Awesome for icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 {% endblock %}

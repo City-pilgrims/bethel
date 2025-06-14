@@ -1,129 +1,130 @@
 {% extends 'base_way.html' %}
 {% load bootstrap4 %}
 {% load static %}
+{% load group_tags %}
 
 {% block content %}
-<style>
-    .page-header {
-        position: fixed;
-        top: 110px;
-        left: 50%;
-        transform: translateX(-50%);
-        max-width: 500px;
-        width: calc(100% - 40px);
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 0.5rem 0.5rem;
-        background: linear-gradient(135deg, #800020 0%, #B22222 100%);
-        color: white;
-        z-index: 100;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        margin: 0;
-        border-radius: 10px;
-    }
-
-    .header-title {
-        flex: 0 0 75%;
-        margin: 0;
-        font-size: 1rem;
-        font-weight: bold;
-        padding-right: 0.8rem;
-    }
-
-    .header-button-area {
-        flex: 0 0 25%;
-        display: flex;
-        justify-content: flex-end;
-        align-items: center;
-    }
-
-    .btn-header-create {
-        background: rgba(255, 255, 255, 0.2);
-        color: white;
-        border: 2px solid rgba(255, 255, 255, 0.3);
-        padding: 8px 20px;
-        border-radius: 25px;
-        font-weight: bold;
-        text-decoration: none;
-        transition: all 0.3s ease;
-        backdrop-filter: blur(10px);
-        white-space: nowrap;
-        font-size: 0.9rem;
-    }
-
-    .btn-header-create:hover {
-        background: rgba(255, 255, 255, 0.3);
-        color: white;
-        text-decoration: none;
-        transform: translateY(-1px);
-        box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
-    }
-
-    .container {
-        display: flex;
-        padding: 0;
-        margin: 0 auto;
-    }
-
-    .container a {
-        width: 45%;
-        max-width: 300px;
-    }
-
-    .container div {
-        justify-content: left;
-        align-items: center;
-        border-radius: 0.5rem;
-    }
-
-    .container img {
-        width: 100%;
-        border-radius: 0.5rem;
-
-    }
-
-    @media (max-width: 700px) {
+    <style>
         .page-header {
-            top: 100px;
+            position: fixed;
+            top: 110px;
+            left: 50%;
+            transform: translateX(-50%);
+            max-width: 500px;
+            width: calc(100% - 40px);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             padding: 0.5rem 0.5rem;
+            background: linear-gradient(135deg, #800020 0%, #B22222 100%);
+            color: white;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin: 0;
             border-radius: 10px;
         }
 
         .header-title {
-            font-size: 1.1rem;
             flex: 0 0 75%;
+            margin: 0;
+            font-size: 1rem;
+            font-weight: bold;
+            padding-right: 0.8rem;
         }
 
         .header-button-area {
             flex: 0 0 25%;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
         }
 
         .btn-header-create {
-            font-size: 0.75rem;
-            padding: 6px 12px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            padding: 8px 20px;
+            border-radius: 25px;
+            font-weight: bold;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            white-space: nowrap;
+            font-size: 0.9rem;
         }
-    }
-    .sp-list-container {
-        max-width: 700px;
-        margin: 0 auto;
-        padding: 0 20px;
-        padding-top: 60px;
-    }
-</style>
 
+        .btn-header-create:hover {
+            background: rgba(255, 255, 255, 0.3);
+            color: white;
+            text-decoration: none;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
+        }
+
+        .container {
+            display: flex;
+            padding: 0;
+            margin: 0 auto;
+        }
+
+        .container a {
+            width: 45%;
+            max-width: 300px;
+        }
+
+        .container div {
+            justify-content: left;
+            align-items: center;
+            border-radius: 0.5rem;
+        }
+
+        .container img {
+            width: 100%;
+            border-radius: 0.5rem;
+
+        }
+
+        @media (max-width: 700px) {
+            .page-header {
+                top: 100px;
+                padding: 0.5rem 0.5rem;
+                border-radius: 10px;
+            }
+
+            .header-title {
+                font-size: 1.1rem;
+                flex: 0 0 75%;
+            }
+
+            .header-button-area {
+                flex: 0 0 25%;
+            }
+
+            .btn-header-create {
+                font-size: 0.75rem;
+                padding: 6px 12px;
+            }
+        }
+        .sp-list-container {
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 0 20px;
+            padding-top: 60px;
+        }
+    </style>
+
+
+    <!-- ------------------------------ Content ------------------------------------- -->
     <!-- 고정된 페이지 헤더 -->
     <div class="page-header">
         <p class="header-title">매일 순례 (Daily Pilgrimage)</p>
         <div class="header-button-area">
             {% if user.is_authenticated %}
-                {% for group in request.user.groups.all %}
-                    {% if group.name == "Toledot" %}
-                        <a href="{% url 'wayapp:create' %}" class="btn-header-create">
-                            🌟️&nbsp기록
-                        </a>
-                    {% endif %}
-                {% endfor %}
+                {% if request.user|in_groups:"Toledot,Commander" %}
+                    <a href="{% url 'wayapp:create' %}" class="btn-header-create">
+                        🌟️&nbsp기록
+                    </a>
+                {% endif %}
             {% endif %}
         </div>
     </div>

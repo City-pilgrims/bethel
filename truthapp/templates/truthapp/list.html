@@ -1,340 +1,345 @@
 {% extends 'base.html' %}
 {% load bootstrap4 %}
 {% load static %}
+{% load group_tags %}
 
 {% block content %}
-<style>
-    .reciting-list-container {
-        max-width: 500px;
-        margin: 0 auto;
-        padding: 0 20px;
-        padding-top: 120px;
-    }
-
-    .page-header {
-        position: fixed;
-        top: 110px;
-        left: 50%;
-        transform: translateX(-50%);
-        max-width: 500px;
-        width: calc(100% - 40px);
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 0.5rem 0.5rem;
-        background: linear-gradient(135deg, #800020 0%, #B22222 100%);
-        color: white;
-        z-index: 100;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        margin: 0;
-        border-radius: 10px;
-    }
-
-    .header-title {
-        flex: 0 0 70%;
-        margin: 0;
-        font-size: 1rem;
-        font-weight: bold;
-        padding-right: 0.8rem;
-    }
-
-    .header-button-area {
-        flex: 0 0 30%;
-        display: flex;
-        justify-content: flex-end;
-        align-items: center;
-    }
-
-    .btn-header-create {
-        background: rgba(255, 255, 255, 0.2);
-        color: white;
-        border: 2px solid rgba(255, 255, 255, 0.3);
-        padding: 8px 20px;
-        border-radius: 25px;
-        font-weight: bold;
-        text-decoration: none;
-        transition: all 0.3s ease;
-        backdrop-filter: blur(10px);
-        white-space: nowrap;
-        font-size: 0.9rem;
-    }
-
-    .btn-header-create:hover {
-        background: rgba(255, 255, 255, 0.3);
-        color: white;
-        text-decoration: none;
-        transform: translateY(-1px);
-        box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
-    }
-
-    .reciting-grid {
-        margin-top: 1rem;
-        display: flex;
-        flex-direction: column;
-        gap: 1rem;
-    }
-
-    .reciting-card {
-        background: white;
-        border-radius: 12px;
-        overflow: hidden;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        border: 1px solid #e9ecef;
-    }
-
-    .card-body {
-        padding: 0.5rem;
-    }
-
-    /* 음성과 이미지를 한 줄에 배치 */
-    .content-row {
-        display: flex;
-        gap: 10px;
-        align-items: flex-start;
-        width: 100%;
-    }
-
-    /* 오디오 섹션 */
-    .audio-section {
-        flex: 1;
-        min-width: 0;
-    }
-
-    .audio-label {
-        font-size: 0.75rem;
-        color: #6c757d;
-        margin-bottom: 5px;
-        display: flex;
-        align-items: center;
-        gap: 3px;
-    }
-
-    .audio-player {
-        width: 100%;
-        height: 32px;
-        font-size: 12px;
-    }
-
-    /* 묵상 파일 미리보기 - 작게 */
-    .meditation-preview {
-        flex: 0 0 80px;
-        text-align: center;
-    }
-
-    .meditation-preview img {
-        width: 80px;
-        height: 60px;
-        object-fit: cover;
-        border-radius: 6px;
-        border: 1px solid #dee2e6;
-    }
-
-    .meditation-preview video {
-        width: 80px;
-        height: 60px;
-        border-radius: 6px;
-        border: 1px solid #dee2e6;
-    }
-
-    .meditation-label {
-        font-size: 0.65rem;
-        color: #6c757d;
-        margin-top: 3px;
-        line-height: 1.1;
-    }
-
-    /* 페이지네이션 */
-    .pagination-container {
-        text-align: center;
-        margin: 2rem 0;
-    }
-
-    .pagination {
-        display: inline-flex;
-        gap: 0.3rem;
-    }
-
-    .page-link {
-        padding: 6px 12px;
-        border-radius: 15px;
-        text-decoration: none;
-        color: #007bff;
-        border: 1px solid #dee2e6;
-        transition: all 0.2s ease;
-        font-size: 0.8rem;
-    }
-
-    .page-link:hover {
-        background-color: #007bff;
-        color: white;
-        text-decoration: none;
-    }
-
-    .page-link.current {
-        background-color: #007bff;
-        color: white;
-        border-color: #007bff;
-    }
-
-    @media (max-width: 700px) {
+    <style>
         .reciting-list-container {
-            padding-top: 30px;
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 0 20px;
+            padding-top: 120px;
         }
 
         .page-header {
-            top: 100px;
+            position: fixed;
+            top: 110px;
+            left: 50%;
+            transform: translateX(-50%);
+            max-width: 500px;
+            width: calc(100% - 40px);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             padding: 0.5rem 0.5rem;
+            background: linear-gradient(135deg, #800020 0%, #B22222 100%);
+            color: white;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin: 0;
             border-radius: 10px;
         }
 
         .header-title {
-            font-size: 1.1rem;
-            flex: 0 0 75%;
+            flex: 0 0 70%;
+            margin: 0;
+            font-size: 1rem;
+            font-weight: bold;
+            padding-right: 0.8rem;
         }
 
         .header-button-area {
-            flex: 0 0 25%;
+            flex: 0 0 30%;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
         }
 
         .btn-header-create {
-            font-size: 0.75rem;
-            padding: 6px 12px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            padding: 8px 20px;
+            border-radius: 25px;
+            font-weight: bold;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            white-space: nowrap;
+            font-size: 0.9rem;
         }
 
+        .btn-header-create:hover {
+            background: rgba(255, 255, 255, 0.3);
+            color: white;
+            text-decoration: none;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
+        }
+
+        .reciting-grid {
+            margin-top: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .reciting-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border: 1px solid #e9ecef;
+        }
+
+        .card-body {
+            padding: 0.5rem;
+        }
+
+        /* 음성과 이미지를 한 줄에 배치 */
         .content-row {
-            gap: 8px;
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+            width: 100%;
         }
 
-        .meditation-preview {
-            flex: 0 0 70px;
+        /* 오디오 섹션 */
+        .audio-section {
+            flex: 1;
+            min-width: 0;
         }
 
-        .meditation-preview img,
-        .meditation-preview video {
-            width: 70px;
-            height: 50px;
+        .audio-label {
+            font-size: 0.75rem;
+            color: #6c757d;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 3px;
         }
 
         .audio-player {
-            height: 28px;
+            width: 100%;
+            height: 32px;
+            font-size: 12px;
+        }
+
+        /* 묵상 파일 미리보기 - 작게 */
+        .meditation-preview {
+            flex: 0 0 80px;
+            text-align: center;
+        }
+
+        .meditation-preview img {
+            width: 80px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 6px;
+            border: 1px solid #dee2e6;
+        }
+
+        .meditation-preview video {
+            width: 80px;
+            height: 60px;
+            border-radius: 6px;
+            border: 1px solid #dee2e6;
         }
 
         .meditation-label {
-            font-size: 0.6rem;
-        }
-    }
-
-    @media (max-width: 700px) {
-        .content-row {
-            gap: 6px;
+            font-size: 0.65rem;
+            color: #6c757d;
+            margin-top: 3px;
+            line-height: 1.1;
         }
 
-        .meditation-preview {
-            flex: 0 0 60px;
+        /* 페이지네이션 */
+        .pagination-container {
+            text-align: center;
+            margin: 2rem 0;
         }
 
-        .meditation-preview img,
-        .meditation-preview video {
-            width: 60px;
-            height: 45px;
+        .pagination {
+            display: inline-flex;
+            gap: 0.3rem;
         }
-    }
-</style>
 
-<div class="reciting-list-container">
-    <!-- 고정된 페이지 헤더 -->
-    <div class="page-header">
-        <p class="header-title">🔥 읊조리고 그려보면 빛이난다</p>
-        <div class="header-button-area">
-            {% if user.is_authenticated %}
-                <a href="{% url 'truthapp:create' %}" class="btn-header-create">
-                    🎤 녹음
-                </a>
-            {% endif %}
+        .page-link {
+            padding: 6px 12px;
+            border-radius: 15px;
+            text-decoration: none;
+            color: #007bff;
+            border: 1px solid #dee2e6;
+            transition: all 0.2s ease;
+            font-size: 0.8rem;
+        }
+
+        .page-link:hover {
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+        }
+
+        .page-link.current {
+            background-color: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
+
+        @media (max-width: 700px) {
+            .reciting-list-container {
+                padding-top: 30px;
+            }
+
+            .page-header {
+                top: 100px;
+                padding: 0.5rem 0.5rem;
+                border-radius: 10px;
+            }
+
+            .header-title {
+                font-size: 1.1rem;
+                flex: 0 0 75%;
+            }
+
+            .header-button-area {
+                flex: 0 0 25%;
+            }
+
+            .btn-header-create {
+                font-size: 0.75rem;
+                padding: 6px 12px;
+            }
+
+            .content-row {
+                gap: 8px;
+            }
+
+            .meditation-preview {
+                flex: 0 0 70px;
+            }
+
+            .meditation-preview img,
+            .meditation-preview video {
+                width: 70px;
+                height: 50px;
+            }
+
+            .audio-player {
+                height: 28px;
+            }
+
+            .meditation-label {
+                font-size: 0.6rem;
+            }
+        }
+
+        @media (max-width: 700px) {
+            .content-row {
+                gap: 6px;
+            }
+
+            .meditation-preview {
+                flex: 0 0 60px;
+            }
+
+            .meditation-preview img,
+            .meditation-preview video {
+                width: 60px;
+                height: 45px;
+            }
+        }
+    </style>
+
+
+    <!-- ------------------------------ Content ------------------------------------- -->
+    <div class="reciting-list-container">
+        <!-- 고정된 페이지 헤더 -->
+        <div class="page-header">
+            <p class="header-title">🔥 읊조리고 그려보면 빛이난다</p>
+            <div class="header-button-area">
+                {% if user.is_authenticated %}
+                    {% if request.user|in_groups:"Toledot,Commander" %}
+                        <a href="{% url 'truthapp:create' %}" class="btn-header-create">
+                            🎤 녹음
+                        </a>
+                    {% endif %}
+                {% endif %}
+            </div>
         </div>
-    </div>
 
-    <!-- 읊조림 목록 -->
-    {% if reciting_list %}
-        <div class="reciting-grid">
-            {% for reciting in reciting_list %}
-                <div class="reciting-card"
-                    <!-- 카드 본문 - 음성과 이미지를 한 줄에 -->
-                    <div class="card-body">
-                        <div class="content-row">
-                            <!-- 오디오 섹션 -->
-                            {% if reciting.audio %}
-                                <div class="audio-section">
-                                    <div class="audio-label">
-                                        <img src="{{ reciting.author.profile.image.url }}"
-                                             style="width: 20px; height: 20px; border-radius: 50%; object-fit: cover;">
-                                        <span style="font-size: 0.8rem;">{{ reciting.author.username }}</span>
-                                        <span style="font-size: 0.6rem;"><{{ reciting.created_at|date:"m월 d일 H:i" }}></span>
-                                    </div>
-                                    <audio controls class="audio-player">
-                                        <source src="{{ reciting.audio.url }}" type="audio/mpeg">
-                                        오디오를 재생할 수 없습니다.
-                                    </audio>
-                                </div>
-                            {% endif %}
-
-                            <!-- 첨부된 묵상 파일 - 작게 표시 -->
-                            {% with attached_file=reciting.get_attached_file %}
-                                {% if attached_file %}
-                                    <div class="meditation-preview">
-                                        {% if attached_file.type == 'image' %}
-                                            <img src="{{ attached_file.file.url }}" alt="첨부 이미지">
-                                        {% elif attached_file.type == 'video' %}
-                                            <video controls>
-                                                <source src="{{ attached_file.file.url }}" type="video/mp4">
-                                                동영상을 재생할 수 없습니다.
-                                            </video>
-                                        {% endif %}
-                                        {% if reciting.author == user %}
-                                            <div class="meditation-label">
-                                                <a href="{% url 'truthapp:delete' pk=reciting.pk %}"
-                                                   onclick="return confirm('삭제하시겠습니까?')">🗑️</a>
-                                            </div>
-                                        {% endif %}
+        <!-- 읊조림 목록 -->
+        {% if reciting_list %}
+            <div class="reciting-grid">
+                {% for reciting in reciting_list %}
+                    <div class="reciting-card"
+                        <!-- 카드 본문 - 음성과 이미지를 한 줄에 -->
+                        <div class="card-body">
+                            <div class="content-row">
+                                <!-- 오디오 섹션 -->
+                                {% if reciting.audio %}
+                                    <div class="audio-section">
+                                        <div class="audio-label">
+                                            <img src="{{ reciting.author.profile.image.url }}"
+                                                 style="width: 20px; height: 20px; border-radius: 50%; object-fit: cover;">
+                                            <span style="font-size: 0.8rem;">{{ reciting.author.username }}</span>
+                                            <span style="font-size: 0.6rem;"><{{ reciting.created_at|date:"m월 d일 H:i" }}></span>
+                                        </div>
+                                        <audio controls class="audio-player">
+                                            <source src="{{ reciting.audio.url }}" type="audio/mpeg">
+                                            오디오를 재생할 수 없습니다.
+                                        </audio>
                                     </div>
                                 {% endif %}
-                            {% endwith %}
+
+                                <!-- 첨부된 묵상 파일 - 작게 표시 -->
+                                {% with attached_file=reciting.get_attached_file %}
+                                    {% if attached_file %}
+                                        <div class="meditation-preview">
+                                            {% if attached_file.type == 'image' %}
+                                                <img src="{{ attached_file.file.url }}" alt="첨부 이미지">
+                                            {% elif attached_file.type == 'video' %}
+                                                <video controls>
+                                                    <source src="{{ attached_file.file.url }}" type="video/mp4">
+                                                    동영상을 재생할 수 없습니다.
+                                                </video>
+                                            {% endif %}
+                                            {% if reciting.author == user %}
+                                                <div class="meditation-label">
+                                                    <a href="{% url 'truthapp:delete' pk=reciting.pk %}"
+                                                       onclick="return confirm('삭제하시겠습니까?')">🗑️</a>
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                    {% endif %}
+                                {% endwith %}
+                            </div>
                         </div>
                     </div>
-                </div>
-            {% endfor %}
-        </div>
+                {% endfor %}
+            </div>
 
-        <!-- 페이지네이션 -->
-        {% if is_paginated %}
-            <div class="pagination-container">
-                <div class="pagination">
-                    {% if page_obj.has_previous %}
-                        <a href="?page=1" class="page-link">처음</a>
-                        <a href="?page={{ page_obj.previous_page_number }}" class="page-link">이전</a>
-                    {% endif %}
-
-                    {% for num in page_obj.paginator.page_range %}
-                        {% if page_obj.number == num %}
-                            <span class="page-link current">{{ num }}</span>
-                        {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
-                            <a href="?page={{ num }}" class="page-link">{{ num }}</a>
+            <!-- 페이지네이션 -->
+            {% if is_paginated %}
+                <div class="pagination-container">
+                    <div class="pagination">
+                        {% if page_obj.has_previous %}
+                            <a href="?page=1" class="page-link">처음</a>
+                            <a href="?page={{ page_obj.previous_page_number }}" class="page-link">이전</a>
                         {% endif %}
-                    {% endfor %}
 
-                    {% if page_obj.has_next %}
-                        <a href="?page={{ page_obj.next_page_number }}" class="page-link">다음</a>
-                        <a href="?page={{ page_obj.paginator.num_pages }}" class="page-link">마지막</a>
-                    {% endif %}
+                        {% for num in page_obj.paginator.page_range %}
+                            {% if page_obj.number == num %}
+                                <span class="page-link current">{{ num }}</span>
+                            {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                                <a href="?page={{ num }}" class="page-link">{{ num }}</a>
+                            {% endif %}
+                        {% endfor %}
+
+                        {% if page_obj.has_next %}
+                            <a href="?page={{ page_obj.next_page_number }}" class="page-link">다음</a>
+                            <a href="?page={{ page_obj.paginator.num_pages }}" class="page-link">마지막</a>
+                        {% endif %}
+                    </div>
                 </div>
+            {% endif %}
+
+        {% else %}
+            <!-- 빈 상태 처리 -->
+            <div style="text-align: center; padding: 2rem; color: #6c757d;">
+                <h5>아직 등록된 묵상이 없습니다</h5>
             </div>
         {% endif %}
-
-    {% else %}
-        <!-- 빈 상태 처리 -->
-        <div style="text-align: center; padding: 2rem; color: #6c757d;">
-            <h5>아직 등록된 묵상이 없습니다</h5>
-        </div>
-    {% endif %}
-</div>
+    </div>
 {% endblock %}
