@@ -24,9 +24,9 @@ environ.Env.read_env(
 SECRET_KEY = read_secret('DJANGO_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ['citypilgrims.com', 'www.citypilgrims.com', '64.176.228.128']
+ALLOWED_HOSTS = ['citypilgrims.com', 'www.citypilgrims.com', 'm.citypilgrims.com', '64.176.228.128']
 
 CSRF_TRUSTED_ORIGINS = [
     'https://citypilgrims.com',
@@ -54,5 +54,8 @@ DATABASES = {
         'PASSWORD': read_secret('MYSQL_PASSWORD'),
         'HOST': 'mariadb',
         'PORT': '3306',
+        'OPTIONS': {
+            'charset': 'utf8mb4',
+        }
     }
 }
