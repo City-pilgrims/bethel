@@ -124,7 +124,7 @@
 
         {% if target_user == user and user.is_authenticated and user.pk %}
             <a href="{% url 'accountapp:update' pk=user.pk %}" style="text-decoration-line: none; color: black;">
-                ✏️정보 변경
+                정보 변경
             </a>
             &nbsp&nbsp
             <a href="{% url 'accountapp:logout' %}?next={% url 'accountapp:detail' pk=user.pk %}" style="text-decoration-line: none;">

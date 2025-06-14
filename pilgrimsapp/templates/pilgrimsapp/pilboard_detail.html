@@ -103,8 +103,7 @@
             {% if pilboard.author == user %}
                 <div>
                     <button style="border: none; outline: none; background: transparent; cursor:pointer;" onclick="toggleActions(event)">
-                        <img src="{% static 'edit_post.jpg' %}" alt="post"
-                            style="width: 22px; height: 22px; cursor: pointer;">
+                        ✏️
                     </button>
                     <!-- Update and Delete buttons, initially hidden -->
                     <div id="popup-actions" class="popup-actions" style="display: none;">
@@ -114,8 +113,8 @@
                 </div>
                 &nbsp
                 <div>
-                    <a href="{% url 'pilgrimsapp:pilboardlist' %}" style="text-decoration-line: none; display: flex; align-items: center;">
-                        👀
+                    <a href="{% url 'pilgrimsapp:pilboardlist' %}" style="text-decoration-line: none; display: flex; align-items: center; margin-right: 1rem; color: black;">
+                        ☰
                     </a>
                 </div>
             {% endif %}

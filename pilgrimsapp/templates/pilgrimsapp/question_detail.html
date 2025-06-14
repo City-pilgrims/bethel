@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load group_tags %}
 
 {% block content %}
     <!-- There is no style in this html. -->
@@ -93,28 +94,26 @@
             </div>
         </div>
 
-        <!-- 답변 작성 -->
         {% if user.is_authenticated %}
-            <div class="card mb-4">
-                <div class="card-header">
-                    <h5 class="mb-0">
-                        <i class="fas fa-edit me-2"></i>답변 작성
-                    </h5>
+            <!-- 답변 작성 -->
+            {% if request.user|in_groups:"Commander" %}
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="fas fa-edit me-2"></i>답변 작성
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <form method="post" action="{% url 'pilgrimsapp:answer_create' question.pk %}">
+                            {% csrf_token %}
+                            <div class="mb-3">
+                                {{ answer_form.content }}
+                            </div>
+                            <button type="submit" class="btn btn-primary">답변 등록</button>
+                        </form>
+                    </div>
                 </div>
-                <div class="card-body">
-                    <form method="post" action="{% url 'pilgrimsapp:answer_create' question.pk %}">
-                        {% csrf_token %}
-                        <div class="mb-3">
-                            {{ answer_form.content }}
-                        </div>
-                        <button type="submit" class="btn btn-primary">답변 등록</button>
-                    </form>
-                </div>
-            </div>
-        {% else %}
-            <div class="alert alert-info text-center">
-                답변을 작성하려면 <a href="{% url 'accountapp:login' %}">로그인</a>이 필요합니다.
-            </div>
+            {% endif %}
         {% endif %}
 
         <!-- 목록으로 돌아가기 -->
