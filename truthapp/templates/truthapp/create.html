@@ -10,7 +10,6 @@
             border-radius: 10px;
             margin: 20px 0;
             text-align: center;
-            border: 2px dashed #dee2e6;
         }
 
          .meditation-selector {
@@ -18,7 +17,6 @@
             padding: 20px;
             border-radius: 10px;
             margin: 20px 0;
-            border: 1px solid #dee2e6;
             max-width: 500px;
             margin-left: auto;
             margin-right: auto;
@@ -209,8 +207,11 @@
 
             <!-- 오디오 파일 업로드 -->
             <div class="audio-upload">
-                <p class="text-muted">MP3, WAV, M4A 등 오디오 파일을 업로드하세요</p>
-                <input type="file" accept="audio/*" capture id="id_audio" name="audio">
+                <!-- 커스텀 버튼 -->
+                <label for="id_audio" class="btn btn-outline-primary">
+                    🎤 녹음
+                </label>
+                <input type="file" accept="audio/*" capture id="id_audio" name="audio" style="display: none;">
                 <div id="audio-preview" style="margin-top: 15px; display: none;">
                     <audio controls style="width: 100%; max-width: 400px;">
                         <source id="audio-source" src="" type="audio/mpeg">
