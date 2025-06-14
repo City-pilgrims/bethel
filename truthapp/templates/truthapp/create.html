@@ -210,7 +210,7 @@
             <!-- 오디오 파일 업로드 -->
             <div class="audio-upload">
                 <p class="text-muted">MP3, WAV, M4A 등 오디오 파일을 업로드하세요</p>
-                {{ form.audio }}
+                <input type="file" accept="audio/*" capture id="id_audio" name="audio">
                 <div id="audio-preview" style="margin-top: 15px; display: none;">
                     <audio controls style="width: 100%; max-width: 400px;">
                         <source id="audio-source" src="" type="audio/mpeg">
@@ -303,35 +303,39 @@
 
     <!-- ------------------------------ Script ------------------------------------- -->
     <script>
-        // 오디오 파일 미리보기 - 수정된 버전
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             const audioInput = document.getElementById('id_audio');
             const audioPreview = document.getElementById('audio-preview');
             const audioElement = audioPreview.querySelector('audio');
 
+            const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
+            // 모바일이면 녹음 기능 우선
+            if (isMobile && audioInput) {
+                audioInput.setAttribute('capture', '');
+            }
+
+            // 오디오 업로드/녹음 미리보기
             if (audioInput) {
-                audioInput.addEventListener('change', function(e) {
+                audioInput.addEventListener('change', function (e) {
                     const file = e.target.files[0];
 
                     if (file) {
-                        // 이전 URL이 있다면 해제
                         if (audioElement.src) {
                             URL.revokeObjectURL(audioElement.src);
                         }
 
-                        // 파일 타입 검사
                         if (file.type.startsWith('audio/')) {
                             const url = URL.createObjectURL(file);
-
-                            // 오디오 요소 직접 설정
                             audioElement.src = url;
-                            audioElement.load(); // 오디오 다시 로드
+                            audioElement.load();
                             audioPreview.style.display = 'block';
 
                             console.log('오디오 파일 로드됨:', file.name, file.type);
                         } else {
                             alert('오디오 파일만 업로드 가능합니다.');
                             audioPreview.style.display = 'none';
+                            audioElement.src = '';
                         }
                     } else {
                         audioPreview.style.display = 'none';
@@ -343,7 +347,7 @@
                 });
             }
 
-            // 묵상 파일 선택 관련 JavaScript
+            // 묵상 미디어 선택 관련 기능
             const radioItems = document.querySelectorAll('.radio-item');
             const selectedPreview = document.getElementById('selected-preview');
             const previewContent = document.getElementById('preview-content');
@@ -388,7 +392,7 @@
             });
 
             radioItems.forEach(item => {
-                item.addEventListener('click', function() {
+                item.addEventListener('click', function () {
                     const radio = this.querySelector('input[type="radio"]');
                     if (radio) {
                         radio.checked = true;
